@@ -22,6 +22,9 @@ buildPythonPackage rec {
     six
   ];
 
+  # no tests
+  doCheck = false;
+
   pythonImportsCheck = [
     "shortuuidfield"
   ];

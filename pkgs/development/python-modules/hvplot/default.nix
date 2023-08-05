@@ -10,14 +10,14 @@
 
 buildPythonPackage rec {
   pname = "hvplot";
-  version = "0.8.3";
+  version = "0.8.4";
   format = "setuptools";
 
   disabled = pythonOlder "3.6";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-JiuN5WNEcN4jaUgVgvoHjx5Zj9fldYwoPhuGBawuhiM=";
+    hash = "sha256-7/X9qXExNKwN89JkihGJfuQKCbGiVhrTMBiALhi4fCI=";
   };
 
   propagatedBuildInputs = [
@@ -39,6 +39,6 @@ buildPythonPackage rec {
     homepage = "https://hvplot.pyviz.org";
     changelog = "https://github.com/holoviz/hvplot/releases/tag/v${version}";
     license = licenses.bsd3;
-    maintainers = with maintainers; [ costrouc ];
+    maintainers = with maintainers; [ ];
   };
 }

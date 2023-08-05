@@ -32,7 +32,7 @@ stdenv.mkDerivation (finalAttrs: builtins.removeAttrs pinData [ "hashes" ] // {
     owner = "vector-im";
     repo = "element-desktop";
     rev = "v${finalAttrs.version}";
-    sha256 = desktopSrcHash;
+    hash = desktopSrcHash;
   };
 
   offlineCache = fetchYarnDeps {
@@ -149,5 +149,6 @@ stdenv.mkDerivation (finalAttrs: builtins.removeAttrs pinData [ "hashes" ] // {
     license = licenses.asl20;
     maintainers = teams.matrix.members;
     inherit (electron.meta) platforms;
+    mainProgram = "element-desktop";
   };
 })

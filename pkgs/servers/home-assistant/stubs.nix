@@ -8,7 +8,7 @@
 
 buildPythonPackage rec {
   pname = "homeassistant-stubs";
-  version = "2023.6.0";
+  version = "2023.8.0";
   format = "pyproject";
 
   disabled = python.version != home-assistant.python.version;
@@ -17,7 +17,7 @@ buildPythonPackage rec {
     owner = "KapJI";
     repo = "homeassistant-stubs";
     rev = "refs/tags/${version}";
-    hash = "sha256-efwrTHWc4m4biP7b39OU1GRifoKm49hEUTtIfrNGUeA=";
+    hash = "sha256-znnNWQpoJ+omYt7keW14Nc7FDqiCpZNsEWL0hEijtsI=";
   };
 
   nativeBuildInputs = [
@@ -30,7 +30,6 @@ buildPythonPackage rec {
     substituteInPlace pyproject.toml --replace \
       'homeassistant = "${version}"' \
       'homeassistant = "~${lib.versions.majorMinor home-assistant.version}"'
-    cat pyproject.toml
   '';
 
   pythonImportsCheck = [

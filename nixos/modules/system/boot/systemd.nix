@@ -587,7 +587,7 @@ in
     # Some overrides to upstream units.
     systemd.services."systemd-backlight@".restartIfChanged = false;
     systemd.services."systemd-fsck@".restartIfChanged = false;
-    systemd.services."systemd-fsck@".path = [ config.system.path ];
+    systemd.services."systemd-fsck@".path = [ pkgs.util-linux ] ++ config.system.fsPackages;
     systemd.services."systemd-makefs@" = {
       restartIfChanged = false;
       path = [ pkgs.util-linux ] ++ config.system.fsPackages;
@@ -595,6 +595,11 @@ in
       # file, the units generated in /run/systemd/generator would
       # override anything we put here. But by forcing the use of a
       # drop-in in /etc, it does apply.
+      overrideStrategy = "asDropin";
+    };
+    systemd.services."systemd-mkswap@" = {
+      restartIfChanged = false;
+      path = [ pkgs.util-linux ];
       overrideStrategy = "asDropin";
     };
     systemd.services.systemd-random-seed.restartIfChanged = false;

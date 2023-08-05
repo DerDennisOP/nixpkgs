@@ -2,13 +2,13 @@
 
 buildGoModule rec {
   pname = "pachyderm";
-  version = "2.6.1";
+  version = "2.6.6";
 
   src = fetchFromGitHub {
     owner = "pachyderm";
     repo = "pachyderm";
     rev = "v${version}";
-    hash = "sha256-C3qzf/+A1pYTYR3FMtUuqZNU+j8oOHSBLDfyuWYCh5I=";
+    hash = "sha256-EvoxA8Mavr3pQ3GZg6+/cPQJqh+Xe+Rj906aO2frdgU=";
   };
 
   vendorHash = "sha256-3EG9d4ERaWuHaKFt0KFCOKIgTdrL7HZTO+GSi2RROKY=";

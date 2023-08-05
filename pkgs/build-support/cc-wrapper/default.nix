@@ -75,14 +75,14 @@ let
   ccVersion = lib.getVersion cc;
   ccName = lib.removePrefix targetPrefix (lib.getName cc);
 
-  libc_bin = if libc == null then "" else getBin libc;
-  libc_dev = if libc == null then "" else getDev libc;
-  libc_lib = if libc == null then "" else getLib libc;
+  libc_bin = optionalString (libc != null) (getBin libc);
+  libc_dev = optionalString (libc != null) (getDev libc);
+  libc_lib = optionalString (libc != null) (getLib libc);
   cc_solib = getLib cc
     + optionalString (targetPlatform != hostPlatform) "/${targetPlatform.config}";
 
   # The wrapper scripts use 'cat' and 'grep', so we may need coreutils.
-  coreutils_bin = if nativeTools then "" else getBin coreutils;
+  coreutils_bin = optionalString (!nativeTools) (getBin coreutils);
 
   # The "suffix salt" is a arbitrary string added in the end of env vars
   # defined by cc-wrapper's hooks so that multiple cc-wrappers can be used
@@ -106,7 +106,12 @@ let
   isGccArchSupported = arch:
     if targetPlatform.isPower then false else # powerpc does not allow -march=
     if isGNU then
-      { # Intel
+      { # Generic
+        x86-64-v2 = versionAtLeast ccVersion "11.0";
+        x86-64-v3 = versionAtLeast ccVersion "11.0";
+        x86-64-v4 = versionAtLeast ccVersion "11.0";
+
+        # Intel
         skylake        = versionAtLeast ccVersion "6.0";
         skylake-avx512 = versionAtLeast ccVersion "6.0";
         cannonlake     = versionAtLeast ccVersion "8.0";
@@ -116,20 +121,32 @@ let
         cooperlake     = versionAtLeast ccVersion "10.0";
         tigerlake      = versionAtLeast ccVersion "10.0";
         knm            = versionAtLeast ccVersion "8.0";
+        alderlake      = versionAtLeast ccVersion "12.0";
+
         # AMD
         znver1         = versionAtLeast ccVersion "6.0";
         znver2         = versionAtLeast ccVersion "9.0";
         znver3         = versionAtLeast ccVersion "11.0";
+        znver4         = versionAtLeast ccVersion "13.0";
       }.${arch} or true
     else if isClang then
-      { # Intel
+      { #Generic
+        x86-64-v2 = versionAtLeast ccVersion "12.0";
+        x86-64-v3 = versionAtLeast ccVersion "12.0";
+        x86-64-v4 = versionAtLeast ccVersion "12.0";
+
+        # Intel
         cannonlake     = versionAtLeast ccVersion "5.0";
         icelake-client = versionAtLeast ccVersion "7.0";
         icelake-server = versionAtLeast ccVersion "7.0";
         knm            = versionAtLeast ccVersion "7.0";
+        alderlake      = versionAtLeast ccVersion "16.0";
+
         # AMD
         znver1         = versionAtLeast ccVersion "4.0";
         znver2         = versionAtLeast ccVersion "9.0";
+        znver3         = versionAtLeast ccVersion "12.0";
+        znver4         = versionAtLeast ccVersion "16.0";
       }.${arch} or true
     else
       false;
@@ -159,7 +176,7 @@ assert nativePrefix == bintools.nativePrefix;
 stdenv.mkDerivation {
   pname = targetPrefix
     + (if name != "" then name else "${ccName}-wrapper");
-  version = if cc == null then "" else ccVersion;
+  version = optionalString (cc != null) ccVersion;
 
   preferLocalBuild = true;
 
@@ -595,10 +612,10 @@ stdenv.mkDerivation {
     # for substitution in utils.bash
     expandResponseParams = "${expand-response-params}/bin/expand-response-params";
     shell = getBin shell + shell.shellPath or "";
-    gnugrep_bin = if nativeTools then "" else gnugrep;
+    gnugrep_bin = optionalString (!nativeTools) gnugrep;
     # stdenv.cc.cc should not be null and we have nothing better for now.
     # if the native impure bootstrap is gotten rid of this can become `inherit cc;` again.
-    cc = if nativeTools then "" else cc;
+    cc = optionalString (!nativeTools) cc;
     wrapperName = "CC_WRAPPER";
     inherit suffixSalt coreutils_bin bintools;
     inherit libc_bin libc_dev libc_lib;
@@ -606,11 +623,12 @@ stdenv.mkDerivation {
   };
 
   meta =
-    let cc_ = if cc != null then cc else {}; in
-    (if cc_ ? meta then removeAttrs cc.meta ["priority"] else {}) //
+    let cc_ = lib.optionalAttrs (cc != null) cc; in
+    (lib.optionalAttrs (cc_ ? meta) (removeAttrs cc.meta ["priority"])) //
     { description =
         lib.attrByPath ["meta" "description"] "System C compiler" cc_
         + " (wrapper script)";
       priority = 10;
+      mainProgram = if name != "" then name else ccName;
   };
 }

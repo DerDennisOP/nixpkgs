@@ -9,20 +9,20 @@
 
 let
   pname = "photofield-ui";
-  version = "0.10.3";
+  version = "0.10.4";
 
   src = fetchFromGitHub {
     owner = "SmilyOrg";
     repo = "photofield";
     rev = "v${version}";
-    hash = "sha256-OrLsthhnjX6LWehwiBDRzhCmTp3IBsbu9WKVu0zhgaQ=";
+    hash = "sha256-kcKnE4U+XWYfKw5nZSk+xCtYdagHBMZS3hvukEL8p4M=";
   };
 
   webui = buildNpmPackage {
     inherit src version;
     pname = "photofield-ui";
 
-    sourceRoot = "source/ui";
+    sourceRoot = "${src.name}/ui";
 
     npmDepsHash = "sha256-YVyaZsFh5bolDzMd5rXWrbbXQZBeEIV6Fh/kwN+rvPk=";
 

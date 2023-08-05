@@ -4,15 +4,16 @@
 , nushell
 , IOKit
 , CoreFoundation
+, nix-update-script
 }:
 
 rustPlatform.buildRustPackage {
   pname = "nushell_plugin_query";
-  version = "0.80.0";
+  version = "0.83.1";
 
   src = nushell.src;
 
-  cargoHash = "sha256-k4UjHNf5L9RmYuB66gcoyCmhd1MvtAxTOxRh24sv0sk=";
+  cargoHash = "sha256-0Bcu2h1ooc4z4ezKSjl7ca5cNQwnF3je7XzdhuqP4iQ=";
 
   buildInputs = lib.optionals stdenv.isDarwin [ IOKit CoreFoundation ];
 
@@ -20,6 +21,10 @@ rustPlatform.buildRustPackage {
 
   # compilation fails with a missing symbol
   doCheck = false;
+
+  passthru = {
+    updateScript = nix-update-script { };
+  };
 
   meta = with lib; {
     description = "A Nushell plugin to query JSON, XML, and various web data";

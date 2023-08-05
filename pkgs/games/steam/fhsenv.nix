@@ -61,6 +61,9 @@ let
 in buildFHSEnv rec {
   name = "steam";
 
+  # Steam still needs 32bit and various native games do too
+  multiArch = true;
+
   targetPkgs = pkgs: with pkgs; [
     steam
     # License agreement
@@ -137,6 +140,7 @@ in buildFHSEnv rec {
 
     # SteamVR
     udev
+    dbus
 
     # Other things from runtime
     glib
@@ -188,6 +192,7 @@ in buildFHSEnv rec {
     libvorbis # Dead Cells
     libxcrypt # Alien Isolation, XCOM 2, Company of Heroes 2
     mono
+    ncurses # Crusader Kings III
     xorg.xkeyboardconfig
     xorg.libpciaccess
     xorg.libXScrnSaver # Dead Cells
@@ -195,7 +200,6 @@ in buildFHSEnv rec {
 
     # screeps dependencies
     gtk3
-    dbus
     zlib
     atk
     cairo
@@ -294,7 +298,7 @@ in buildFHSEnv rec {
     name = "steam-run";
 
     targetPkgs = commonTargetPkgs;
-    inherit multiPkgs profile extraInstallCommands;
+    inherit multiArch multiPkgs profile extraInstallCommands;
     inherit unshareIpc unsharePid;
 
     runScript = writeShellScript "steam-run" ''

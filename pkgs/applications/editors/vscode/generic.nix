@@ -2,6 +2,7 @@
 , unzip, libsecret, libXScrnSaver, libxshmfence, buildPackages
 , atomEnv, at-spi2-atk, autoPatchelfHook
 , systemd, fontconfig, libdbusmenu, glib, buildFHSEnv, wayland
+, libglvnd
 
 # Populate passthru.tests
 , tests
@@ -13,6 +14,8 @@
 , version, src, meta, sourceRoot, commandLineArgs
 , executableName, longName, shortName, pname, updateScript
 , dontFixup ? false
+, rev ? null, vscodeServer ? null
+
 # sourceExecutableName is the name of the binary in the source archive, over
 # which we have no control
 , sourceExecutableName ? executableName
@@ -30,6 +33,8 @@ let
       inherit executableName longName tests updateScript;
       fhs = fhs {};
       fhsWithPackages = f: fhs { additionalPkgs = f; };
+    } // lib.optionalAttrs (vscodeServer != null) {
+      inherit rev vscodeServer;
     };
 
     desktopItem = makeDesktopItem {
@@ -38,7 +43,7 @@ let
       comment = "Code Editing. Redefined.";
       genericName = "Text Editor";
       exec = "${executableName} %F";
-      icon = "code";
+      icon = "vs${executableName}";
       startupNotify = true;
       startupWMClass = shortName;
       categories = [ "Utility" "TextEditor" "Development" "IDE" ];
@@ -47,7 +52,7 @@ let
       actions.new-empty-window = {
         name = "New Empty Window";
         exec = "${executableName} --new-window %F";
-        icon = "code";
+        icon = "vs${executableName}";
       };
     };
 
@@ -57,7 +62,7 @@ let
       comment = "Code Editing. Redefined.";
       genericName = "Text Editor";
       exec = executableName + " --open-url %U";
-      icon = "code";
+      icon = "vs${executableName}";
       startupNotify = true;
       categories = [ "Utility" "TextEditor" "Development" "IDE" ];
       mimeTypes = [ "x-scheme-handler/vscode" ];
@@ -98,8 +103,9 @@ let
       ln -s "$desktopItem/share/applications/${executableName}.desktop" "$out/share/applications/${executableName}.desktop"
       ln -s "$urlHandlerDesktopItem/share/applications/${executableName}-url-handler.desktop" "$out/share/applications/${executableName}-url-handler.desktop"
 
+      # These are named vscode.png, vscode-insiders.png, etc to match the name in upstream *.deb packages.
       mkdir -p "$out/share/pixmaps"
-      cp "$out/lib/vscode/resources/app/resources/linux/code.png" "$out/share/pixmaps/code.png"
+      cp "$out/lib/vscode/resources/app/resources/linux/code.png" "$out/share/pixmaps/vs${executableName}.png"
 
       # Override the previously determined VSCODE_PATH with the one we know to be correct
       sed -i "/ELECTRON=/iVSCODE_PATH='$out/lib/vscode'" "$out/bin/${executableName}"
@@ -109,6 +115,9 @@ let
       # The credentials should be stored in a secure keychain already, so the benefit of this is questionable
       # in the first place.
       rm -rf $out/lib/vscode/resources/app/node_modules/vscode-encrypt
+
+      # Unbundle libglvnd as VSCode doesn't include libGLESv2.so.2 which is necessary for GPU acceleration
+      rm -rf $out/lib/vscode/libGLESv2.so
     '') + ''
       runHook postInstall
     '';
@@ -117,6 +126,7 @@ let
       gappsWrapperArgs+=(
         # Add gio to PATH so that moving files to the trash works when not using a desktop environment
         --prefix PATH : ${glib.bin}/bin
+        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libglvnd ]}
         --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
         --add-flags ${lib.escapeShellArg commandLineArgs}
       )

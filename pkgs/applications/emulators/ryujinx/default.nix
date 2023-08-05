@@ -1,7 +1,6 @@
 { lib
 , buildDotnetModule
 , dotnetCorePackages
-, stdenvNoCC
 , fetchFromGitHub
 , wrapGAppsHook
 , libX11
@@ -29,13 +28,13 @@
 
 buildDotnetModule rec {
   pname = "ryujinx";
-  version = "1.1.826"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
+  version = "1.1.968"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
 
   src = fetchFromGitHub {
     owner = "Ryujinx";
     repo = "Ryujinx";
-    rev = "42b9c1e8fede88880454154f8c3683f1f8424ed9";
-    sha256 = "1r879kvs6v08lrxw75xs5jsffmf8j6bb7bs9szrrgj24aza0kl72";
+    rev = "487261592eb9e9c31cacd08860f8894027bb1a07";
+    sha256 = "002qgnh7xb9i9yqm4a3m9m7sbx1iz7ng8k5nnanlq897djs3hy0g";
   };
 
   dotnet-sdk = dotnetCorePackages.sdk_7_0;

@@ -2803,6 +2803,8 @@ self: super: with self; {
 
   django-debug-toolbar = callPackage ../development/python-modules/django-debug-toolbar { };
 
+  django-dynamic-fixture = callPackage ../development/python-modules/django-dynamic-fixture { };
+
   django-dynamic-preferences = callPackage ../development/python-modules/django-dynamic-preferences { };
 
   django-encrypted-model-fields = callPackage ../development/python-modules/django-encrypted-model-fields { };
@@ -2973,7 +2975,9 @@ self: super: with self; {
 
   django-timezone-field = callPackage ../development/python-modules/django-timezone-field { };
 
-  django-treebeard = callPackage ../development/python-modules/django-treebeard { };
+  django-twilio = callPackage ../development/python-modules/django-twilio { };
+
+  django_treebeard = callPackage ../development/python-modules/django_treebeard { };
 
   django-two-factor-auth = callPackage ../development/python-modules/django-two-factor-auth { };
 

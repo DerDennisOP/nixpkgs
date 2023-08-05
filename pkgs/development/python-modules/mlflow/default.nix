@@ -38,14 +38,14 @@
 
 buildPythonPackage rec {
   pname = "mlflow";
-  version = "2.2.2";
+  version = "2.4.2";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-PvLC7iDJp63t/zTnVsbtrGLPTZBXZa0OgHS8naoMWAw";
+    hash = "sha256-CxpxsP9Gedzo/yrpcz6ZbsC2wQbbk0EuDfhgb3kYZ8g=";
   };
 
   # Remove currently broken dependency `shap`, a model explainability package.
@@ -53,7 +53,7 @@ buildPythonPackage rec {
   # but not mlflow has a 'skinny' install option which does not require `shap`.
   nativeBuildInputs = [ pythonRelaxDepsHook ];
   pythonRemoveDeps = [ "shap" ];
-  pythonRelaxDeps = [ "pytz" ];
+  pythonRelaxDeps = [ "pytz" "pyarrow" ];
 
   propagatedBuildInputs = [
     alembic

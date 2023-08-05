@@ -1,4 +1,4 @@
-{ callPackage, openssl, fetchpatch, python3, enableNpm ? true }:
+{ callPackage, openssl, python3, enableNpm ? true }:
 
 let
   buildNodejs = callPackage ./nodejs.nix {
@@ -9,11 +9,12 @@ let
 in
 buildNodejs {
   inherit enableNpm;
-  version = "20.0.0";
-  sha256 = "sha256-dFDnV5Vo99HLOYGFz85HLaKDeyqjbFliCyLOS5d7XLU=";
+  version = "20.5.0";
+  sha256 = "sha256-yzJ1aVje8cBOBpp5txtSymHtFZDBfyz6HuOvZB9y4Fg=";
   patches = [
     ./revert-arm64-pointer-auth.patch
     ./disable-darwin-v8-system-instrumentation-node19.patch
     ./bypass-darwin-xcrun-node16.patch
+    ./node-npm-build-npm-package-logic.patch
   ];
 }

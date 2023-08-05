@@ -2,11 +2,11 @@
 
 let
   pname = "rambox";
-  version = "2.1.2";
+  version = "2.1.5";
 
   src = fetchurl {
     url = "https://github.com/ramboxapp/download/releases/download/v${version}/Rambox-${version}-linux-x64.AppImage";
-    sha256 = "sha256-FeW11prM9wTYA6cELF/qcITbTqJ+B+VVvzcw2W6i/CY=";
+    sha256 = "sha256-+9caiyh5o537cwjF0/bGdaJGQNd2Navn/nLYaYjnRN8=";
   };
 
   desktopItem = (makeDesktopItem {

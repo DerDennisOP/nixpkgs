@@ -2,6 +2,7 @@
 , stdenv
 , fetchFromGitHub
 , appstream-glib
+, cargo
 , dbus
 , desktop-file-utils
 , glib
@@ -16,24 +17,25 @@
 , ninja
 , pkg-config
 , rustPlatform
+, rustc
 , wrapGAppsHook4
 }:
 
 stdenv.mkDerivation rec {
   pname = "mousai";
-  version = "0.7.0";
+  version = "0.7.3";
 
   src = fetchFromGitHub {
     owner = "SeaDve";
     repo = "Mousai";
     rev = "v${version}";
-    hash = "sha256-dL+ZBv97T0sN7mPoOKsp5f6Dl9aarBYm2RRUfOclb+s=";
+    hash = "sha256-VAP2ENgI0Ge1JJEfNtw8dgOLZ1g0sEaoZHICFKI3hXM=";
   };
 
   cargoDeps = rustPlatform.fetchCargoTarball {
     inherit src;
     name = "${pname}-${version}";
-    hash = "sha256-qAtMpYVZwyay1KGYlH40T0HambrWh4CaZnwjvqev44g=";
+    hash = "sha256-vbMfIk/fXmAHgouzyeceP7jAc/OIyUxFDu/+31aB1F4=";
   };
 
   nativeBuildInputs = [
@@ -43,11 +45,10 @@ stdenv.mkDerivation rec {
     ninja
     pkg-config
     wrapGAppsHook4
-  ] ++ (with rustPlatform; [
-    cargoSetupHook
-    rust.cargo
-    rust.rustc
-  ]);
+    rustPlatform.cargoSetupHook
+    cargo
+    rustc
+  ];
 
   buildInputs = [
     dbus

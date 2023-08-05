@@ -10,7 +10,7 @@
 
 buildPythonPackage rec {
   pname = "pyfibaro";
-  version = "0.7.0";
+  version = "0.7.2";
   format = "pyproject";
 
   disabled = pythonOlder "3.9";
@@ -19,7 +19,7 @@ buildPythonPackage rec {
     owner = "rappenze";
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-3qE9U3yyIFl245RihcL3Kvm1NHFd42r6dvZ2Gz4sOvY=";
+    hash = "sha256-dAC+jW+Ky+uPsgBXpp81+bxytWYeZbd+zWzEXkmM198=";
   };
 
   nativeBuildInputs = [

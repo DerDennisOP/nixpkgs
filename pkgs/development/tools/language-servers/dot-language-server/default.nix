@@ -2,16 +2,16 @@
 
 buildNpmPackage rec {
   pname = "dot-language-server";
-  version = "1.1.26";
+  version = "1.2.1";
 
   src = fetchFromGitHub {
     owner = "nikeee";
     repo = "dot-language-server";
     rev = "v${version}";
-    hash = "sha256-Wv+Bw+mcc4vn1CfjIy5vAg5Kw7TUf+flcqLguvQVaCQ=";
+    hash = "sha256-NGkobMZrvWlW/jteFowZgGUVQiNm3bS5gv5tN2485VA=";
   };
 
-  npmDepsHash = "sha256-w7c6f+VlBx2kvLyEWgbT9S0hA7mu5gCNuQzGThkXAGY=";
+  npmDepsHash = "sha256-spskj0vqfR9GoQeKyfLsQgRp6JasZeVLCVBt6wZiSP8=";
 
   npmBuildScript = "compile";
 

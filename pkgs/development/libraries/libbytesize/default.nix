@@ -14,15 +14,15 @@
 , python3
 }:
 
-stdenv.mkDerivation (self: {
+stdenv.mkDerivation (finalAttrs: {
   pname = "libbytesize";
-  version = "2.8";
+  version = "2.9";
 
   src = fetchFromGitHub {
     owner = "storaged-project";
     repo = "libbytesize";
-    rev = self.version;
-    hash = "sha256-/TVv/srhbotIkne0G77hgBF4j+74INqVUr8zlKsaoM0=";
+    rev = finalAttrs.version;
+    hash = "sha256-4jbu8Hmc4I1IYKiWlCQq7ob98HsgDTqJdghj3ZzOuN8=";
   };
 
   outputs = [ "out" "dev" "devdoc" "man" ];
@@ -43,6 +43,8 @@ stdenv.mkDerivation (self: {
     mpfr
     pcre2
   ];
+
+  strictDeps = true;
 
   meta = {
     homepage = "https://github.com/storaged-project/libbytesize";

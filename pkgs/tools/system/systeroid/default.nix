@@ -7,13 +7,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "systeroid";
-  version = "0.3.2";
+  version = "0.4.2";
 
   src = fetchFromGitHub {
     owner = "orhun";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-V3b6jrxxgapiqtvcEeLRIB2S3CXDOi+sWm+cO0zOpkA=";
+    sha256 = "sha256-yEsDtjoV0NQPG/PJnVMBBMuPDBdK2kIfUWxtfkvRI04=";
   };
 
   postPatch = ''
@@ -21,7 +21,7 @@ rustPlatform.buildRustPackage rec {
       --replace '"/usr/share/doc/kernel-doc-*/Documentation/*",' '"${linux-doc}/share/doc/linux-doc/*",'
   '';
 
-  cargoHash = "sha256-K2fWQ4X6/PypYyw2cDXl9bol16PvJHqnEcF5N3BEIdo=";
+  cargoHash = "sha256-Plu7JxTFjLUXWLmIax/QPgq7QzdQd0vFinj+Gx03AQQ=";
 
   buildInputs = [
     xorg.libxcb
@@ -34,6 +34,6 @@ rustPlatform.buildRustPackage rec {
     description = "More powerful alternative to sysctl(8) with a terminal user interface";
     homepage = "https://github.com/orhun/systeroid";
     license = licenses.asl20;
-    maintainers = with maintainers; [ SuperSandro2000 ];
+    maintainers = with maintainers; [ figsoda ];
   };
 }

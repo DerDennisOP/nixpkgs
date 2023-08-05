@@ -1,10 +1,10 @@
-{ pkgs, lib, makeWrapper }:
+{ pkgs
+, lib
+, makeWrapper
+, nodejs ? pkgs.nodejs_18
+}:
 
 let
-
-  # To control nodejs version we pass down
-  nodejs = pkgs.nodejs-14_x;
-
   fetchElmDeps = pkgs.callPackage ./fetchElmDeps.nix { };
 
   # Haskell packages that require ghc 8.10
@@ -115,15 +115,14 @@ let
   };
 
   nodePkgs = pkgs.callPackage ./packages/node-composition.nix {
-    inherit pkgs;
-    nodejs = pkgs.nodejs-14_x;
+    inherit pkgs nodejs;
     inherit (pkgs.stdenv.hostPlatform) system;
   };
 
 in lib.makeScope pkgs.newScope (self: with self; {
   inherit fetchElmDeps nodejs;
 
-  /* Node/NPM based dependecies can be upgraded using script `packages/generate-node-packages.sh`.
+  /* Node/NPM based dependencies can be upgraded using script `packages/generate-node-packages.sh`.
 
       * Packages which rely on `bin-wrap` will fail by default
         and can be patched using `patchBinwrap` function defined in `packages/lib.nix`.
@@ -152,7 +151,8 @@ in lib.makeScope pkgs.newScope (self: with self; {
     };
   };
 } // (hs810Pkgs self).elmPkgs // (hs92Pkgs self).elmPkgs // (with elmLib; with (hs810Pkgs self).elmPkgs; {
-  elm-verify-examples = patchBinwrap [elmi-to-json] nodePkgs.elm-verify-examples // {
+  elm-verify-examples = let
+    patched = patchBinwrap [elmi-to-json] nodePkgs.elm-verify-examples // {
     meta = with lib; nodePkgs.elm-verify-examples.meta // {
       description = "Verify examples in your docs";
       homepage = "https://github.com/stoeffel/elm-verify-examples";
@@ -160,6 +160,14 @@ in lib.makeScope pkgs.newScope (self: with self; {
       maintainers = [ maintainers.turbomack ];
     };
   };
+  in patched.override (old: {
+    preRebuild = (old.preRebuild or "") + ''
+      # This should not be needed (thanks to binwrap* being nooped) but for some reason it still needs to be done
+      # in case of just this package
+      # TODO: investigate, same as for elm-coverage below
+      sed 's/\"install\".*/\"install\":\"echo no-op\",/g' --in-place node_modules/elmi-to-json/package.json
+    '';
+  });
 
   elm-coverage = let
       patched = patchNpmElm (patchBinwrap [elmi-to-json] nodePkgs.elm-coverage);

@@ -1,6 +1,6 @@
 { stdenv, lib, fetchFromGitHub, runCommand, unzip, meson, ninja, pkg-config, qtbase, qttools, wrapQtAppsHook, luajit }:
 let
-  dataVersion = "2.28.0";
+  dataVersion = "2.30.1";
   frontendVersion = "unstable-2023-04-09";
 in
 stdenv.mkDerivation {
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
       owner = "PathOfBuildingCommunity";
       repo = "PathOfBuilding";
       rev = "v${dataVersion}";
-      hash = "sha256-IO6qUE6OcjNibljNzcJQlwji3DZqrBm7cvHedKuAwpM=";
+      hash = "sha256-2itcALgl8eDkZylb/hmePDMILM4RxW2u5LYLbg+NNJ4=";
     };
 
     nativeBuildInputs = [ unzip ];

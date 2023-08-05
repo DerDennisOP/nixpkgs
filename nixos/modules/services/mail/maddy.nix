@@ -13,8 +13,6 @@ let
     # configuration here https://github.com/foxcpp/maddy/blob/master/maddy.conf
     # Do not use this in production!
 
-    tls off
-
     auth.pass_table local_authdb {
       table sql_table {
         driver sqlite3
@@ -35,6 +33,7 @@ let
       }
       optional_step file /etc/maddy/aliases
     }
+
     msgpipeline local_routing {
       destination postmaster $(local_domains) {
         modify {
@@ -207,12 +206,82 @@ in {
           Server configuration, see
           [https://maddy.email](https://maddy.email) for
           more information. The default configuration of this module will setup
-          minimal maddy instance for mail transfer without TLS encryption.
+          minimal Maddy instance for mail transfer without TLS encryption.
 
           ::: {.note}
           This should not be used in a production environment.
           :::
         '';
+      };
+
+      tls = {
+        loader = mkOption {
+          type = with types; nullOr (enum [ "off" "file" "acme" ]);
+          default = "off";
+          description = lib.mdDoc ''
+            TLS certificates are obtained by modules called "certificate
+            loaders".
+
+            The `file` loader module reads certificates from files specified by
+            the `certificates` option.
+
+            Alternatively the `acme` module can be used to automatically obtain
+            certificates using the ACME protocol.
+
+            Module configuration is done via the `tls.extraConfig` option.
+
+            Secrets such as API keys or passwords should not be supplied in
+            plaintext. Instead the `secrets` option can be used to read secrets
+            at runtime as environment variables. Secrets can be referenced with
+            `{env:VAR}`.
+          '';
+        };
+
+        certificates = mkOption {
+          type = with types; listOf (submodule {
+            options = {
+              keyPath = mkOption {
+                type = types.path;
+                example = "/etc/ssl/mx1.example.org.key";
+                description = lib.mdDoc ''
+                  Path to the private key used for TLS.
+                '';
+              };
+              certPath = mkOption {
+                type = types.path;
+                example = "/etc/ssl/mx1.example.org.crt";
+                description = lib.mdDoc ''
+                  Path to the certificate used for TLS.
+                '';
+              };
+            };
+          });
+          default = [];
+          example = lib.literalExpression ''
+            [{
+              keyPath = "/etc/ssl/mx1.example.org.key";
+              certPath = "/etc/ssl/mx1.example.org.crt";
+            }]
+          '';
+          description = lib.mdDoc ''
+            A list of attribute sets containing paths to TLS certificates and
+            keys. Maddy will use SNI if multiple pairs are selected.
+          '';
+        };
+
+        extraConfig = mkOption {
+          type = with types; nullOr lines;
+          description = lib.mdDoc ''
+            Arguments for the specified certificate loader.
+
+            In case the `tls` loader is set, the defaults are considered secure
+            and there is no need to change anything in most cases.
+            For available options see [upstream manual](https://maddy.email/reference/tls/).
+
+            For ACME configuration, see [following page](https://maddy.email/reference/tls-acme).
+          '';
+          default = "";
+        };
       };
 
       openFirewall = mkOption {
@@ -224,7 +293,7 @@ in {
       };
 
       ensureAccounts = mkOption {
-        type = types.listOf types.str;
+        type = with types; listOf str;
         default = [];
         description = lib.mdDoc ''
           List of IMAP accounts which get automatically created. Note that for
@@ -265,10 +334,42 @@ in {
         });
       };
 
+      secrets = lib.mkOption {
+        type = with types; listOf path;
+        description = lib.mdDoc ''
+          A list of files containing the various secrets. Should be in the format
+          expected by systemd's `EnvironmentFile` directory. Secrets can be
+          referenced in the format `{env:VAR}`.
+        '';
+        default = [ ];
+      };
+
     };
   };
 
   config = mkIf cfg.enable {
+
+    assertions = [
+      {
+        assertion = cfg.tls.loader == "file" -> cfg.tls.certificates != [];
+        message = ''
+          If Maddy is configured to use TLS, tls.certificates with attribute sets
+          of certPath and keyPath must be provided.
+          Read more about obtaining TLS certificates here:
+          https://maddy.email/tutorials/setting-up/#tls-certificates
+        '';
+      }
+      {
+        assertion = cfg.tls.loader == "acme" -> cfg.tls.extraConfig != "";
+        message = ''
+          If Maddy is configured to obtain TLS certificates using the ACME
+          loader, extra configuration options must be supplied via
+          tls.extraConfig option.
+          See upstream documentation for more details:
+          https://maddy.email/reference/tls-acme
+        '';
+      }
+    ];
 
     systemd = {
 
@@ -279,6 +380,7 @@ in {
             User = cfg.user;
             Group = cfg.group;
             StateDirectory = [ "maddy" ];
+            EnvironmentFile = cfg.secrets;
           };
           restartTriggers = [ config.environment.etc."maddy/maddy.conf".source ];
           wantedBy = [ "multi-user.target" ];
@@ -318,6 +420,23 @@ in {
         $(primary_domain) = ${cfg.primaryDomain}
         $(local_domains) = ${toString cfg.localDomains}
         hostname ${cfg.hostname}
+
+        ${if (cfg.tls.loader == "file") then ''
+          tls file ${concatStringsSep " " (
+            map (x: x.certPath + " " + x.keyPath
+          ) cfg.tls.certificates)} ${optionalString (cfg.tls.extraConfig != "") ''
+            { ${cfg.tls.extraConfig} }
+          ''}
+        '' else if (cfg.tls.loader == "acme") then ''
+          tls {
+            loader acme {
+              ${cfg.tls.extraConfig}
+            }
+          }
+        '' else if (cfg.tls.loader == "off") then ''
+          tls off
+        '' else ""}
+
         ${cfg.config}
       '';
     };

@@ -19,7 +19,7 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "iotas";
-  version = "0.1.11";
+  version = "0.2.2";
   format = "other";
 
   src = fetchFromGitLab {
@@ -27,7 +27,7 @@ python3.pkgs.buildPythonApplication rec {
     owner = "cheywood";
     repo = pname;
     rev = version;
-    hash = "sha256-exXY0JFGuDZTbMmUEM+sFEitHXCsFBAHjybIyMmilk8=";
+    hash = "sha256-oThsyTsNM3283e4FViISdFzmeQnU7qXHh4xEJWA2fkc=";
   };
 
   nativeBuildInputs = [
@@ -61,7 +61,6 @@ python3.pkgs.buildPythonApplication rec {
 
   # prevent double wrapping
   dontWrapGApps = true;
-
   preFixup = ''
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';

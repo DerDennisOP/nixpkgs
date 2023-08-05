@@ -1,27 +1,53 @@
-{ lib, stdenv, buildGoModule, fetchFromGitHub, buildFHSEnv, installShellFiles }:
+{ lib, stdenv, buildGoModule, fetchFromGitHub, buildFHSEnv, installShellFiles, go-task }:
 
 let
 
   pkg = buildGoModule rec {
     pname = "arduino-cli";
-    version = "0.31.0";
+    version = "0.33.0";
 
     src = fetchFromGitHub {
       owner = "arduino";
       repo = pname;
       rev = version;
-      hash = "sha256-y51/5Gu6nTaL+XLP7hLk/gaksIdRahecl5q5jYBWATE=";
+      hash = "sha256-iwVxaNkz4AgLXPRjzD3vNJ7k+whWvpQUl66nSmRFW+U=";
     };
 
     nativeBuildInputs = [
       installShellFiles
     ];
 
+    nativeCheckInputs = [
+      go-task
+    ];
+
     subPackages = [ "." ];
 
-    vendorSha256 = "sha256-JuuGJuSax2tfuQHH/Hqk1JpQE2OboYJKJjzPjIZ1UD8=";
+    vendorHash = "sha256-efZnuxXbC31u7FciULGYvpaWiCm9boQRLUpxW9evyJQ=";
 
-    doCheck = false;
+    postPatch = let
+      skipTests = [
+        # tries to "go install"
+        "TestDummyMonitor"
+        # try to Get "https://downloads.arduino.cc/libraries/library_index.tar.bz2"
+        "TestDownloadAndChecksums"
+        "TestParseArgs"
+        "TestParseReferenceCores"
+        "TestPlatformSearch"
+        "TestPlatformSearchSorting"
+      ];
+    in ''
+      substituteInPlace Taskfile.yml \
+        --replace "go test" "go test -p $NIX_BUILD_CORES -skip '(${lib.concatStringsSep "|" skipTests})'"
+    '';
+
+    doCheck = stdenv.isLinux;
+
+    checkPhase = ''
+      runHook preCheck
+      task go:test
+      runHook postCheck
+    '';
 
     ldflags = [
       "-s" "-w" "-X github.com/arduino/arduino-cli/version.versionString=${version}" "-X github.com/arduino/arduino-cli/version.commit=unknown"

@@ -127,8 +127,6 @@ let
     ''
       export NIX_ENFORCE_PURITY="''${NIX_ENFORCE_PURITY-1}"
       export NIX_ENFORCE_NO_NATIVE="''${NIX_ENFORCE_NO_NATIVE-1}"
-      ${lib.optionalString (system == "x86_64-linux") "NIX_LIB64_IN_SELF_RPATH=1"}
-      ${lib.optionalString (system == "mipsel-linux") "NIX_LIB32_IN_SELF_RPATH=1"}
     '';
 
 
@@ -310,6 +308,9 @@ in
       # top-level pkgs as an override either.
       perl = super.perl.override { enableThreading = false; enableCrypt = false; };
     };
+
+    # `gettext` comes with obsolete config.sub/config.guess that don't recognize LoongArch64.
+    extraNativeBuildInputs = [ prevStage.updateAutotoolsGnuConfigScriptsHook ];
   })
 
   # First rebuild of gcc; this is linked against all sorts of junk
@@ -322,11 +323,11 @@ in
     assert            isFromBootstrapFiles prevStage.gcc-unwrapped;
     assert            isFromBootstrapFiles prevStage.coreutils;
     assert            isFromBootstrapFiles prevStage.gnugrep;
+    assert isBuiltByBootstrapFilesCompiler prevStage.patchelf;
     stageFun prevStage {
       name = "bootstrap-stage-xgcc";
       overrides = final: prev: {
-        inherit (prevStage) ccWrapperStdenv coreutils gnugrep gettext bison texinfo zlib gnum4 perl;
-        patchelf = bootstrapTools;
+        inherit (prevStage) ccWrapperStdenv coreutils gnugrep gettext bison texinfo zlib gnum4 perl patchelf;
         ${localSystem.libc} = getLibc prevStage;
         gmp      = prev.gmp.override { cxx = false; };
         gcc-unwrapped =
@@ -387,6 +388,9 @@ in
             '';
           });
       };
+
+      # `gettext` comes with obsolete config.sub/config.guess that don't recognize LoongArch64.
+      extraNativeBuildInputs = [ prevStage.updateAutotoolsGnuConfigScriptsHook ];
     })
 
   # 2nd stdenv that contains our own rebuilt binutils and is used for
@@ -399,6 +403,7 @@ in
     assert isBuiltByBootstrapFilesCompiler prevStage.gcc-unwrapped;
     assert            isFromBootstrapFiles prevStage.coreutils;
     assert            isFromBootstrapFiles prevStage.gnugrep;
+    assert isBuiltByBootstrapFilesCompiler prevStage.patchelf;
     stageFun prevStage {
     name = "bootstrap-stage2";
 
@@ -468,9 +473,9 @@ in
 
     };
 
+    # `gettext` comes with obsolete config.sub/config.guess that don't recognize LoongArch64.
     # `libtool` comes with obsolete config.sub/config.guess that don't recognize Risc-V.
-    extraNativeBuildInputs =
-      lib.optional (localSystem.isRiscV) prevStage.updateAutotoolsGnuConfigScriptsHook;
+    extraNativeBuildInputs = [ prevStage.updateAutotoolsGnuConfigScriptsHook ];
   })
 
 
@@ -484,6 +489,7 @@ in
     assert isBuiltByBootstrapFilesCompiler prevStage.gcc-unwrapped;
     assert            isFromBootstrapFiles prevStage.coreutils;
     assert            isFromBootstrapFiles prevStage.gnugrep;
+    assert        isBuiltByNixpkgsCompiler prevStage.patchelf;
     assert lib.all isBuiltByNixpkgsCompiler (with prevStage; [ gmp isl_0_20 libmpc mpfr ]);
     stageFun prevStage {
     name = "bootstrap-stage3";
@@ -507,10 +513,11 @@ in
         passthru = a.passthru // { inherit (self) gmp mpfr libmpc isl; };
       });
     };
-    extraNativeBuildInputs = [ prevStage.patchelf ] ++
+    extraNativeBuildInputs = [
+      prevStage.patchelf
       # Many tarballs come with obsolete config.sub/config.guess that don't recognize aarch64.
-      lib.optional (!localSystem.isx86 || localSystem.libc == "musl")
-                   prevStage.updateAutotoolsGnuConfigScriptsHook;
+      prevStage.updateAutotoolsGnuConfigScriptsHook
+    ];
   })
 
 
@@ -524,6 +531,7 @@ in
     assert isBuiltByNixpkgsCompiler prevStage.gcc-unwrapped;
     assert     isFromBootstrapFiles prevStage.coreutils;
     assert     isFromBootstrapFiles prevStage.gnugrep;
+    assert isBuiltByNixpkgsCompiler prevStage.patchelf;
     stageFun prevStage {
     name = "bootstrap-stage4";
 
@@ -562,10 +570,11 @@ in
         shell = self.bash + "/bin/bash";
       };
     };
-    extraNativeBuildInputs = [ prevStage.patchelf prevStage.xz ] ++
+    extraNativeBuildInputs = [
+      prevStage.patchelf prevStage.xz
       # Many tarballs come with obsolete config.sub/config.guess that don't recognize aarch64.
-      lib.optional (!localSystem.isx86 || localSystem.libc == "musl")
-                   prevStage.updateAutotoolsGnuConfigScriptsHook;
+      prevStage.updateAutotoolsGnuConfigScriptsHook
+    ];
   })
 
   # Construct the final stdenv.  It uses the Glibc and GCC, and adds
@@ -584,6 +593,7 @@ in
     assert isBuiltByNixpkgsCompiler prevStage.gcc-unwrapped;
     assert isBuiltByNixpkgsCompiler prevStage.coreutils;
     assert isBuiltByNixpkgsCompiler prevStage.gnugrep;
+    assert isBuiltByNixpkgsCompiler prevStage.patchelf;
     {
     inherit config overlays;
     stdenv = import ../generic rec {
@@ -599,10 +609,11 @@ in
       initialPath =
         ((import ../generic/common-path.nix) {pkgs = prevStage;});
 
-      extraNativeBuildInputs = [ prevStage.patchelf ] ++
+      extraNativeBuildInputs = [
+        prevStage.patchelf
         # Many tarballs come with obsolete config.sub/config.guess that don't recognize aarch64.
-        lib.optional (!localSystem.isx86 || localSystem.libc == "musl")
-        prevStage.updateAutotoolsGnuConfigScriptsHook;
+        prevStage.updateAutotoolsGnuConfigScriptsHook
+      ];
 
       cc = prevStage.gcc;
 
@@ -626,7 +637,7 @@ in
           ]
         # Library dependencies
         ++ map getLib (
-            [ attr acl zlib pcre libidn2 libunistring ]
+            [ attr acl zlib gnugrep.pcre2 libidn2 libunistring ]
             ++ lib.optional (gawk.libsigsegv != null) gawk.libsigsegv
           )
         # More complicated cases
@@ -634,8 +645,7 @@ in
         ++  [ linuxHeaders # propagated from .dev
             binutils gcc gcc.cc gcc.cc.lib gcc.expand-response-params gcc.cc.libgcc glibc.passthru.libgcc
           ]
-        ++ lib.optionals (!localSystem.isx86 || localSystem.libc == "musl")
-            [ prevStage.updateAutotoolsGnuConfigScriptsHook prevStage.gnu-config ]
+        ++ [ prevStage.updateAutotoolsGnuConfigScriptsHook prevStage.gnu-config ]
         ++ (with gcc-unwrapped.passthru; [
           gmp libmpc mpfr isl
         ])
@@ -645,7 +655,8 @@ in
         inherit (prevStage)
           gzip bzip2 xz bash coreutils diffutils findutils gawk
           gnused gnutar gnugrep gnupatch patchelf
-          attr acl zlib pcre libunistring;
+          attr acl zlib libunistring;
+        inherit (prevStage.gnugrep) pcre2;
         ${localSystem.libc} = getLibc prevStage;
 
         # Hack: avoid libidn2.{bin,dev} referencing bootstrap tools.  There's a logical cycle.
@@ -673,5 +684,6 @@ in
     assert isBuiltByNixpkgsCompiler prevStage.gcc-unwrapped;
     assert isBuiltByNixpkgsCompiler prevStage.coreutils;
     assert isBuiltByNixpkgsCompiler prevStage.gnugrep;
+    assert isBuiltByNixpkgsCompiler prevStage.patchelf;
     { inherit (prevStage) config overlays stdenv; })
 ]

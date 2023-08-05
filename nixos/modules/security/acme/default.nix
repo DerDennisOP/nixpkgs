@@ -323,7 +323,7 @@ let
             }
           fi
         '');
-      } // optionalAttrs (data.listenHTTP != null && toInt (elemAt (splitString ":" data.listenHTTP) 1) < 1024) {
+      } // optionalAttrs (data.listenHTTP != null && toInt (last (splitString ":" data.listenHTTP)) < 1024) {
         CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
         AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
       };
@@ -487,7 +487,7 @@ let
       };
 
       email = mkOption {
-        type = types.str;
+        type = types.nullOr types.str;
         inherit (defaultAndText "email" null) default defaultText;
         description = lib.mdDoc ''
           Email address for account creation and correspondence from the CA.
@@ -555,7 +555,7 @@ let
       };
 
       credentialsFile = mkOption {
-        type = types.path;
+        type = types.nullOr types.path;
         inherit (defaultAndText "credentialsFile" null) default defaultText;
         description = lib.mdDoc ''
           Path to an EnvironmentFile for the cert's service containing any required and

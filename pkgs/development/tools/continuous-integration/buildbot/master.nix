@@ -65,14 +65,14 @@ let
 
   package = buildPythonApplication rec {
     pname = "buildbot";
-    version = "3.7.0";
+    version = "3.8.0";
     format = "setuptools";
 
     disabled = pythonOlder "3.7";
 
     src = fetchPypi {
       inherit pname version;
-      hash = "sha256-YMLT1SP6NenJIUVTvr58GVrtNXHw+bhfgMpZu3revG4=";
+      hash = "sha256-Z4BmC6Ed+7y4rJologiLXhkIvucXz65KEBxX3LFqExY=";
     };
 
     propagatedBuildInputs = [
@@ -119,9 +119,6 @@ let
     postPatch = ''
       substituteInPlace buildbot/scripts/logwatcher.py --replace '/usr/bin/tail' "$(type -P tail)"
     '';
-
-    # Silence the depreciation warning from SqlAlchemy
-    SQLALCHEMY_SILENCE_UBER_WARNING = 1;
 
     # TimeoutErrors on slow machines -> aarch64
     doCheck = !stdenv.isAarch64;

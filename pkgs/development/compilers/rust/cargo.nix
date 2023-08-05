@@ -1,14 +1,15 @@
 { lib, stdenv, pkgsBuildHost, pkgsHostHost
 , file, curl, pkg-config, python3, openssl, cmake, zlib
-, installShellFiles, makeWrapper, rustPlatform, rustc
+, installShellFiles, makeWrapper, rustPlatform, rust, rustc
 , CoreFoundation, Security
-, auditable ? true
+, auditable ? !cargo-auditable.meta.broken
 , cargo-auditable
+, pkgsBuildBuild
 }:
 
 rustPlatform.buildRustPackage.override {
   cargo-auditable = cargo-auditable.bootstrap;
-} {
+} ({
   pname = "cargo";
   inherit (rustc) version src;
 
@@ -111,5 +112,10 @@ rustPlatform.buildRustPackage.override {
     maintainers = teams.rust.members;
     license = [ licenses.mit licenses.asl20 ];
     platforms = platforms.unix;
+    # https://github.com/alexcrichton/nghttp2-rs/issues/2
+    broken = stdenv.hostPlatform.isx86 && stdenv.buildPlatform != stdenv.hostPlatform;
   };
 }
+// lib.optionalAttrs (rust.toRustTarget stdenv.buildPlatform != rust.toRustTarget stdenv.hostPlatform) {
+  HOST_PKG_CONFIG_PATH="${pkgsBuildBuild.pkg-config}/bin/pkg-config";
+})

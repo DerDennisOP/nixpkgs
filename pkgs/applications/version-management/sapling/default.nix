@@ -4,10 +4,12 @@
 , fetchFromGitHub
 , fetchurl
 , sd
+, cargo
 , curl
 , pkg-config
 , openssl
 , rustPlatform
+, rustc
 , fetchYarnDeps
 , yarn
 , nodejs
@@ -36,14 +38,14 @@ let
   #
   # See https://github.com/NixOS/nixpkgs/pull/198311#issuecomment-1326894295
   myCargoSetupHook = rustPlatform.cargoSetupHook.overrideAttrs (old: {
-    cargoConfig = if stdenv.isDarwin then "" else old.cargoConfig;
+    cargoConfig = lib.optionalString (!stdenv.isDarwin) old.cargoConfig;
   });
 
   src = fetchFromGitHub {
     owner = "facebook";
     repo = "sapling";
     rev = version;
-    hash = "sha256-rZLLRcZNeYP7yKAgBujqEJ9TwwDPAct060pZ4aj/7PM=";
+    hash = "sha256-NwOexCU+TdZAdruivqRuqhwt0veryeGykLdH6vth+p4=";
   };
 
   addonsSrc = "${src}/addons";
@@ -51,7 +53,7 @@ let
   # Fetches the Yarn modules in Nix to to be used as an offline cache
   yarnOfflineCache = fetchYarnDeps {
     yarnLock = "${addonsSrc}/yarn.lock";
-    sha256 = "sha256-cEIij7hocCSPw1Q1ESI/t9IFmLM0Nbr/IjSz3HzBdzU=";
+    sha256 = "sha256-AlY7/cdGr4i87+wMhPBh/+LFDoF8aC23OLDEHu9lYqU=";
   };
 
   # Builds the NodeJS server that runs with `sl web`
@@ -94,17 +96,17 @@ python3Packages.buildPythonApplication {
   pname = "sapling";
   inherit src version;
 
-  sourceRoot = "source/eden/scm";
+  sourceRoot = "${src.name}/eden/scm";
 
   # Upstream does not commit Cargo.lock
   cargoDeps = rustPlatform.importCargoLock {
     lockFile = ./Cargo.lock;
     outputHashes = {
       "abomonation-0.7.3+smallvec1" = "sha256-AxEXR6GC8gHjycIPOfoViP7KceM29p2ZISIt4iwJzvM=";
-      "cloned-0.1.0" = "sha256-54XxXSeGoS0j0+dDUC15xn1Hvpvl2T7NJ0dZ6/ZSd9s=";
-      "fb303_core-0.0.0" = "sha256-YVPObJaxb5Giu3s70YP5syRSCmtijUK6y9g3UOzgrQU=";
-      "fbthrift-0.0.1+unstable" = "sha256-sfn8EB1hbJGq/jFjgCrf9OyBpXmIBv5qlIsiao071Os=";
-      "serde_bser-0.3.1" = "sha256-mrY6K6hoRo4exyZlStEIh8vuQdzd8XGkaR1MCEgKIP8=";
+      "cloned-0.1.0" = "sha256-MKyj91z+hciJOg4Lhb6ik7zUgCwuHsX8N9HVSP2JkKE=";
+      "fb303_core-0.0.0" = "sha256-5AU54rpeDub2Iol56S4X+xfdU07zWAtOyCNRBZLzUZA=";
+      "fbthrift-0.0.1+unstable" = "sha256-n4ES6zRyTgsNxbrM4AUraJ6W4tLHiKdfSyL3Yd0ET34=";
+      "serde_bser-0.3.1" = "sha256-PkQx2/axT/7LQ4Mvfz1AYBWKXGvaTHkOP2jtljvuYxY=";
     };
   };
   postPatch = ''
@@ -147,11 +149,10 @@ python3Packages.buildPythonApplication {
   nativeBuildInputs = [
     curl
     pkg-config
-  ] ++ (with rustPlatform; [
     myCargoSetupHook
-    rust.cargo
-    rust.rustc
-  ]);
+    cargo
+    rustc
+  ];
 
   buildInputs = [
     openssl

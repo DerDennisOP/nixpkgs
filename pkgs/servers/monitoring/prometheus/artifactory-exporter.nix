@@ -6,17 +6,17 @@
 
 buildGoModule rec {
   pname = "artifactory_exporter";
-  version = "1.13.0";
+  version = "1.13.2";
   rev = "v${version}";
 
   src = fetchFromGitHub {
     owner = "peimanja";
     repo = pname;
     rev = rev;
-    hash = "sha256-URavjOb0OEFul4jM3VR0buIMXmNU7nLJ0R3e8vRUWQ8=";
+    hash = "sha256-m5ToXry1LgjWSTU9bjOtsgfVF8wKiKuTwCIC7jNGSKY=";
   };
 
-  vendorHash = "sha256-Gin134G4NPK8M2E2RrgH62ieiuCw15jwm9SJg03w9ts=";
+  vendorHash = "sha256-ikWxTHmqHFWAReKMf6LFza/bhkcfxa4euXUixKPvcpQ=";
 
   subPackages = [ "." ];
 

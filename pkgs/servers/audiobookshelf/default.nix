@@ -1,16 +1,16 @@
-{ lib, stdenv, pkgs, fetchFromGitHub, runCommand, buildNpmPackage, nodejs-16_x, tone, ffmpeg-full, util-linux, libwebp }:
+{ lib, stdenv, pkgs, fetchFromGitHub, runCommand, buildNpmPackage, nodejs_18, tone, ffmpeg-full, util-linux, python3 }:
 
 let
-  nodejs = nodejs-16_x;
+  nodejs = nodejs_18;
 
   pname = "audiobookshelf";
-  version = "2.2.18";
+  version = "2.3.3";
 
   src = fetchFromGitHub {
     owner = "advplyr";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-Ar+OK6HiKf2/47HE+1iTw8MVz9A6qZg1hpZQdZ/40UM=";
+    sha256 = "sha256-wSIA2KKDKf3DNgYNNIyYNT8xyPWCZvwLcWuDhWOZpLs=";
   };
 
   client = buildNpmPackage {
@@ -24,7 +24,7 @@ let
     NODE_OPTIONS = "--openssl-legacy-provider";
 
     npmBuildScript = "generate";
-    npmDepsHash = "sha256-Hsa7ZauUTtYQcCxw1cpuxQ/RfdRvBIh3PO1DXDUbELk=";
+    npmDepsHash = "sha256-s3CwGFK87podBJwAqh7JoMA28vnmf77iexrAbbwZlFk=";
   };
 
   wrapper = import ./wrapper.nix {
@@ -35,10 +35,11 @@ in buildNpmPackage {
   inherit pname version src;
 
   buildInputs = [ util-linux ];
+  nativeBuildInputs = [ python3 ];
 
   dontNpmBuild = true;
   npmInstallFlags = [ "--only-production" ];
-  npmDepsHash = "sha256-0PFeXiS8RSffhrocrHODNpb6d9+nbpulCW5qYIrytDI=";
+  npmDepsHash = "sha256-gueSlQh4tRTjIWvpNG2cj1np/zUGbjsnv3fA2owtiQY=";
 
   installPhase = ''
     mkdir -p $out/opt/client

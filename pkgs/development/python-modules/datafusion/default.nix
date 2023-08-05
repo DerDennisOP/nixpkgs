@@ -1,7 +1,6 @@
 { lib
 , stdenv
 , buildPythonPackage
-, fetchPypi
 , fetchFromGitHub
 , rustPlatform
 , pytestCheckHook
@@ -17,36 +16,36 @@ let
     name = "arrow-testing";
     owner = "apache";
     repo = "arrow-testing";
-    rev = "47f7b56b25683202c1fd957668e13f2abafc0f12";
-    hash = "sha256-ZDznR+yi0hm5O1s9as8zq5nh1QxJ8kXCRwbNQlzXpnI=";
+    rev = "5bab2f264a23f5af68f69ea93d24ef1e8e77fc88";
+    hash = "sha256-Pxx8ohUpXb5u1995IvXmxQMqWiDJ+7LAll/AjQP7ph8=";
   };
 
   parquet-testing = fetchFromGitHub {
     name = "parquet-testing";
     owner = "apache";
     repo = "parquet-testing";
-    rev = "b2e7cc755159196e3a068c8594f7acbaecfdaaac";
-    hash = "sha256-IFvGTOkaRSNgZOj8DziRj88yH5JRF+wgSDZ5N0GNvjk=";
+    rev = "e13af117de7c4f0a4d9908ae3827b3ab119868f3";
+    hash = "sha256-rVI9zyk9IRDlKv4u8BeMb0HRdWLfCpqOlYCeUdA7BB8=";
   };
 in
 
 buildPythonPackage rec {
   pname = "datafusion";
-  version = "22.0.0";
+  version = "25.0.0";
   format = "pyproject";
 
   src = fetchFromGitHub {
     name = "datafusion-source";
     owner = "apache";
     repo = "arrow-datafusion-python";
-    rev = "22.0.0";
-    hash = "sha256-EKurQ4h5IOTU3JiGN+MHrDciQUadUrywNRhnv9S/9iY=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-oC+fp41a9rsdobpvShZ7sDdtYPJQQ7JLg6MFL+4Pksg=";
   };
 
   cargoDeps = rustPlatform.fetchCargoTarball {
     name = "datafusion-cargo-deps";
     inherit src pname version;
-    hash = "sha256-0kfavTFqsQ1Uvg5nQw6VFGlvih8ysOyS2KGT4cTIsVI=";
+    hash = "sha256-0e0ZRgwcS/46mi4c2loAnBA2bsaD+/RiMh7oNg3EvHY=";
   };
 
   nativeBuildInputs = with rustPlatform; [
@@ -79,6 +78,7 @@ buildPythonPackage rec {
       that uses Apache Arrow as its in-memory format.
     '';
     homepage = "https://arrow.apache.org/datafusion/";
+    changelog = "https://github.com/apache/arrow-datafusion-python/blob/${version}/CHANGELOG.md";
     license = with licenses; [ asl20 ];
     maintainers = with maintainers; [ cpcloud ];
   };

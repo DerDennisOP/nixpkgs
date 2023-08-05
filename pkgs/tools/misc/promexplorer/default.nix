@@ -1,13 +1,13 @@
 { lib, nimPackages, fetchFromGitHub }:
 nimPackages.buildNimPackage rec {
   pname = "promexplorer";
-  version = "0.0.3";
+  version = "0.0.5";
   nimBinOnly = true;
   src = fetchFromGitHub {
     owner = "marcusramberg";
     repo = "promexplorer";
     rev = "v${version}";
-    hash = "sha256-q+m4+aWT3IiI/XGmAm7jrJAxRbzzHr+p58eiHqjEbV0=";
+    hash = "sha256-a+9afqdgLgGf2hOWf/QsElq+CurDfE1qDmYCzodZIDU=";
   };
 
   buildInputs = with nimPackages; [ illwill illwillwidgets ];

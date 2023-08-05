@@ -1,6 +1,7 @@
 { stdenv
 , stdenvNoCC
 , lib
+, gitUpdater
 , fetchFromGitHub
 , fetchurl
 , cairo
@@ -34,13 +35,13 @@ rec {
     }:
     stdenvNoCC.mkDerivation rec {
       inherit pname;
-      version = "23.4.1";
+      version = "23.7.1";
 
       src = fetchFromGitHub {
         owner = "notofonts";
         repo = "notofonts.github.io";
         rev = "noto-monthly-release-${version}";
-        hash = "sha256-hiBbhcwktacuoYJnZcsh7Aej5QIrBNkqrel2NhjNjCU=";
+        hash = "sha256-+P0mQ3PaGGPGK3SFPtCe7wrjMgOgZeRpkEQulLeu/zs=";
       };
 
       _variants = map (variant: builtins.replaceStrings [ " " ] [ "" ] variant) variants;
@@ -74,6 +75,10 @@ rec {
         done
       '');
 
+      passthru.updateScript = gitUpdater {
+        rev-prefix = "noto-monthly-release-";
+      };
+
       meta = with lib; {
         description = "Beautiful and free fonts for many languages";
         homepage = "https://www.google.com/get/noto/";
@@ -84,7 +89,7 @@ rec {
       };
     };
 
-  mkNotoCJK = { typeface, version, rev, sha256 }:
+  mkNotoCJK = { typeface, version, sha256 }:
     stdenvNoCC.mkDerivation {
       pname = "noto-fonts-cjk-${lib.toLower typeface}";
       inherit version;
@@ -92,7 +97,8 @@ rec {
       src = fetchFromGitHub {
         owner = "googlefonts";
         repo = "noto-cjk";
-        inherit rev sha256;
+        rev = "${typeface}${version}";
+        inherit sha256;
         sparseCheckout = [ "${typeface}/Variable/OTC" ];
       };
 
@@ -149,15 +155,13 @@ rec {
   noto-fonts-cjk-sans = mkNotoCJK {
     typeface = "Sans";
     version = "2.004";
-    rev = "9f7f3c38eab63e1d1fddd8d50937fe4f1eacdb1d";
-    sha256 = "sha256-PWpcTBnBRK87ZuRI/PsGp2UMQgCCyfkLHwvB1mOl5K0=";
+    sha256 = "sha256-IgalJkiOAVjNxKaPAQWfb5hKeqclliR4qVXCq63FGWY=";
   };
 
   noto-fonts-cjk-serif = mkNotoCJK {
     typeface = "Serif";
-    version = "2.000";
-    rev = "9f7f3c38eab63e1d1fddd8d50937fe4f1eacdb1d";
-    sha256 = "sha256-1w66Ge7DZjbONGhxSz69uFhfsjMsDiDkrGl6NsoB7dY=";
+    version = "2.001";
+    sha256 = "sha256-y1103SS0qkZMhEL5+7kQZ+OBs5tRaqkqOcs4796Fzhg=";
   };
 
   noto-fonts-emoji =
@@ -224,14 +228,14 @@ rec {
   noto-fonts-emoji-blob-bin =
     let
       pname = "noto-fonts-emoji-blob-bin";
-      version = "14.0.1";
+      version = "15.0";
     in
     stdenvNoCC.mkDerivation {
       inherit pname version;
 
       src = fetchurl {
         url = "https://github.com/C1710/blobmoji/releases/download/v${version}/Blobmoji.ttf";
-        hash = "sha256-w9s7uF6E6nomdDmeKB4ATcGB/5A4sTwDvwHT3YGXz8g=";
+        hash = "sha256-3MPWZ1A2ups171dNIiFTJ3C1vZiGy6I8ZF70aUfrePk=";
       };
 
       dontUnpack = true;

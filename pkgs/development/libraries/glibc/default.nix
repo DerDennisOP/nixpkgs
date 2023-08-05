@@ -63,6 +63,13 @@ in
             # Same for musl: https://github.com/NixOS/nixpkgs/issues/78805
             "-Wno-error=missing-attributes"
           ])
+          (lib.optionals (stdenv.hostPlatform.isPower64) [
+            # Do not complain about the Processor Specific ABI (i.e. the
+            # choice to use IEEE-standard `long double`).  We pass this
+            # flag in order to mute a `-Werror=psabi` passed by glibc;
+            # hopefully future glibc releases will not pass that flag.
+            "-Wno-error=psabi"
+          ])
         ]);
     };
 
@@ -87,7 +94,7 @@ in
         "user-defined-trusted-dirs=${stdenv.cc.cc.libgcc}/lib"
       ];
 
-    postInstall = (if stdenv.hostPlatform == stdenv.buildPlatform then ''
+    postInstall = previousAttrs.postInstall + (if stdenv.hostPlatform == stdenv.buildPlatform then ''
       echo SUPPORTED-LOCALES=C.UTF-8/UTF-8 > ../glibc-2*/localedata/SUPPORTED
       make -j''${NIX_BUILD_CORES:-1} localedata/install-locales
     '' else lib.optionalString stdenv.buildPlatform.isLinux ''

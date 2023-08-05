@@ -2,23 +2,29 @@
 , buildGoModule
 , fetchFromGitHub
 , installShellFiles
+, testers
+, supabase-cli
 , nix-update-script
 }:
 
 buildGoModule rec {
   pname = "supabase-cli";
-  version = "1.48.1";
+  version = "1.82.4";
 
   src = fetchFromGitHub {
     owner = "supabase";
     repo = "cli";
     rev = "v${version}";
-    sha256 = "sha256-BTUeGaWWkq1kMGInpu/zlJ7lFSSoiPlTDS/jjKe/uD4=";
+    sha256 = "sha256-lxdIwLhyFDKh3Gb2hkbZcamDEf4DdGEWkaizkGod0Eo=";
   };
 
-  vendorSha256 = "sha256-PAsmUEw6nI2KTrvPCn2Dxm3mrM6f/O4i8P6P0UuDXzo=";
+  vendorSha256 = "sha256-/jYZp0bZUIHUn2Tmbgrpvz3mTQt3rF14wbcvWhEUAzw=";
 
-  ldflags = [ "-s" "-w" "-X" "github.com/supabase/cli/cmd.version=${version}" ];
+  ldflags = [
+    "-s"
+    "-w"
+    "-X=github.com/supabase/cli/internal/utils.Version=${version}"
+  ];
 
   doCheck = false; # tests are trying to connect to localhost
 
@@ -34,7 +40,12 @@ buildGoModule rec {
       --zsh <($out/bin/supabase completion zsh)
   '';
 
-  passthru.updateScript = nix-update-script { };
+  passthru = {
+    tests.version = testers.testVersion {
+      package = supabase-cli;
+    };
+    updateScript = nix-update-script { };
+  };
 
   meta = with lib; {
     description = "A CLI for interacting with supabase";

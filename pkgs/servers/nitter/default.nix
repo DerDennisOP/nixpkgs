@@ -3,17 +3,18 @@
 , nimPackages
 , nixosTests
 , substituteAll
+, unstableGitUpdater
 }:
 
 nimPackages.buildNimPackage rec {
   pname = "nitter";
-  version = "unstable-2023-03-28";
+  version = "unstable-2023-07-21";
 
   src = fetchFromGitHub {
     owner = "zedeus";
     repo = "nitter";
-    rev = "95893eedaa2fb0ca0a0a15257d81b720f7f3eb67";
-    hash = "sha256-nXa8/d8OFFudA4LWpHiCFhnGmvBw2NXMhHMAD9Sp/vk=";
+    rev = "cc5841df308506356d329662d0f0c2ec4713a35c";
+    hash = "sha256-QuWLoKy7suUCTYK79ghdf3o/FGFIDNyN1Iu69DFp6wg=";
   };
 
   patches = [
@@ -52,6 +53,11 @@ nimPackages.buildNimPackage rec {
     cp -r public $out/share/nitter/public
   '';
 
+  passthru = {
+    tests = { inherit (nixosTests) nitter; };
+    updateScript = unstableGitUpdater {};
+  };
+
   meta = with lib; {
     homepage = "https://github.com/zedeus/nitter";
     description = "Alternative Twitter front-end";
@@ -59,6 +65,4 @@ nimPackages.buildNimPackage rec {
     maintainers = with maintainers; [ erdnaxe infinidoge ];
     mainProgram = "nitter";
   };
-
-  passthru.tests = { inherit (nixosTests) nitter; };
 }

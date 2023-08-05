@@ -2753,6 +2753,10 @@ self: super: with self; {
 
   django-autocomplete-light = callPackage ../development/python-modules/django-autocomplete-light { };
 
+  django-bower = callPackage ../development/python-modules/django-bower {
+    bower = pkgs.nodePackages.bower;
+  };
+  
   django-bootstrap3 = callPackage ../development/python-modules/django-bootstrap3 { };
 
   django-bootstrap4 = callPackage ../development/python-modules/django-bootstrap4 { };
@@ -2800,6 +2804,8 @@ self: super: with self; {
   django-csp = callPackage ../development/python-modules/django-csp { };
 
   django-debug-toolbar = callPackage ../development/python-modules/django-debug-toolbar { };
+
+  django-dynamic-fixture = callPackage ../development/python-modules/django-dynamic-fixture { };
 
   django-dynamic-preferences = callPackage ../development/python-modules/django-dynamic-preferences { };
 
@@ -2905,6 +2911,8 @@ self: super: with self; {
 
   django-scopes = callPackage ../development/python-modules/django-scopes { };
 
+  django-shortuuidfield = callPackage ../development/python-modules/django-shortuuidfield { };
+
   djangoql = callPackage ../development/python-modules/djangoql { };
 
   django-ranged-response = callPackage ../development/python-modules/django-ranged-response { };
@@ -2969,7 +2977,9 @@ self: super: with self; {
 
   django-timezone-field = callPackage ../development/python-modules/django-timezone-field { };
 
-  django-treebeard = callPackage ../development/python-modules/django-treebeard { };
+  django-twilio = callPackage ../development/python-modules/django-twilio { };
+
+  django_treebeard = callPackage ../development/python-modules/django_treebeard { };
 
   django-two-factor-auth = callPackage ../development/python-modules/django-two-factor-auth { };
 
@@ -5144,6 +5154,8 @@ self: super: with self; {
   invisible-watermark = callPackage ../development/python-modules/invisible-watermark { };
 
   invocations = callPackage ../development/python-modules/invocations { };
+
+  invoicegenerator = callPackage ../development/python-modules/invoicegenerator { };
 
   invoke = callPackage ../development/python-modules/invoke { };
 

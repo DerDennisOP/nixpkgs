@@ -15,16 +15,16 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "texlab";
-  version = "5.6.0";
+  version = "5.8.0";
 
   src = fetchFromGitHub {
     owner = "latex-lsp";
     repo = "texlab";
     rev = "refs/tags/v${version}";
-    hash = "sha256-3s8Nn3jLj39LWRb3jPbNAx0IcNUxGlvzybm+7+M5FRU=";
+    hash = "sha256-KjCE7ei01ks4TMYiHE9In2Z3AWOw/4D4kIl0vFA4YKs=";
   };
 
-  cargoHash = "sha256-fHw8ulW7VsgxexY+hbZ+2MXwrzz77Ku7vQtsFRAO/JA=";
+  cargoHash = "sha256-1R9bNyNHDcRwn5nlkEFtSGA4V7Bn1Pq3v0E8njGUAYU=";
 
   outputs = [ "out" ] ++ lib.optional (!isCross) "man";
 

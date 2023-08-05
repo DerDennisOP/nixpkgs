@@ -19,19 +19,20 @@
 , at-spi2-core
 , autoPatchelfHook
 , wrapGAppsHook
+, makeWrapper
 }:
 
 let
-  version = "3.1.2-12912";
-  _hash = "80d33f88";
+  version = "3.1.2-13107";
+  _hash = "ad5b5393";
   srcs = {
     x86_64-linux = fetchurl {
       url = "https://dldir1.qq.com/qqfile/qq/QQNT/${_hash}/linuxqq_${version}_amd64.deb";
-      hash = "sha256-F+zIHqYWKiCHYNJZ5hRw0rzltizjuqhVxbpzQGagoZ0=";
+      hash = "sha256-mBfeexWEYpGybFFianUFvlzMv0HoFR4EeFcwlGVXIRA=";
     };
     aarch64-linux = fetchurl {
       url = "https://dldir1.qq.com/qqfile/qq/QQNT/${_hash}/linuxqq_${version}_arm64.deb";
-      hash = "sha256-5n4T0mlfEh9/84wUYiH437R95Qz6/SKDq/AK6baiW24=";
+      hash = "sha256-V6kR2lb63nnNIEhn64Yg0BYYlz7W0Cw60TwnKaJuLgs=";
     };
   };
   src = srcs.${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
@@ -42,7 +43,8 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [
     autoPatchelfHook
-    wrapGAppsHook
+    # makeBinaryWrapper not support shell wrapper specifically for `NIXOS_OZONE_WL`.
+    (wrapGAppsHook.override { inherit makeWrapper; })
     dpkg
   ];
 
@@ -87,7 +89,10 @@ stdenv.mkDerivation {
   '';
 
   preFixup = ''
-    gappsWrapperArgs+=(--prefix PATH : "${lib.makeBinPath [ gjs ]}")
+    gappsWrapperArgs+=(
+      --prefix PATH : "${lib.makeBinPath [ gjs ]}"
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
+    )
   '';
 
   meta = with lib; {

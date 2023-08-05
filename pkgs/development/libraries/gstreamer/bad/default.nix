@@ -14,6 +14,8 @@
 , enableZbar ? false
 , faacSupport ? false
 , faac
+, opencvSupport ? false
+, opencv4
 , faad2
 , ldacbt
 , libass
@@ -38,7 +40,6 @@
 , bluez
 , chromaprint
 , curl
-, directfb
 , fdk_aac
 , flite
 , gsm
@@ -55,7 +56,6 @@
 , libusb1
 , neon
 , openal
-, opencv4
 , openexr_3
 , openh264
 , libopenmpt
@@ -104,17 +104,18 @@
 , microdnsSupport ? false
 # Checks meson.is_cross_build(), so even canExecute isn't enough.
 , enableDocumentation ? stdenv.hostPlatform == stdenv.buildPlatform, hotdoc
+, guiSupport ? true, directfb
 }:
 
 stdenv.mkDerivation rec {
   pname = "gst-plugins-bad";
-  version = "1.22.3";
+  version = "1.22.4";
 
   outputs = [ "out" "dev" ];
 
   src = fetchurl {
     url = "https://gstreamer.freedesktop.org/src/${pname}/${pname}-${version}.tar.xz";
-    hash = "sha256-4XmP7i2GEn8GN0gcYH+YMpO/D9garXClx7RyBa82Idg=";
+    hash = "sha256-6q9TIkVl6qvVBco5xtV2lxm0V5XPUyzhzrYOGy6+maw=";
   };
 
   patches = [
@@ -171,7 +172,6 @@ stdenv.mkDerivation rec {
     libusb1
     neon
     openal
-    opencv4
     openexr_3
     openh264
     rtmpdump
@@ -183,9 +183,6 @@ stdenv.mkDerivation rec {
     libwebp
     xvidcore
     gnutls
-    libGL
-    libGLU
-    gtk3
     game-music-emu
     openssl
     libxml2
@@ -195,6 +192,9 @@ stdenv.mkDerivation rec {
     libfreeaptx
     zxing-cpp
     usrsctp
+    wildmidi
+  ] ++ lib.optionals opencvSupport [
+    opencv4
   ] ++ lib.optionals enableZbar [
     zbar
   ] ++ lib.optionals faacSupport [
@@ -213,14 +213,10 @@ stdenv.mkDerivation rec {
     wayland
     wayland-protocols
   ] ++ lib.optionals (!stdenv.isDarwin) [
-    # wildmidi requires apple's OpenAL
-    # TODO: package apple's OpenAL, fix wildmidi, include on Darwin
-    wildmidi
     # TODO: mjpegtools uint64_t is not compatible with guint64 on Darwin
     mjpegtools
 
     chromaprint
-    directfb
     flite
     libdrm
     libgudev
@@ -237,6 +233,13 @@ stdenv.mkDerivation rec {
     serd
     sord
     sratom
+
+    libGL
+    libGLU
+  ] ++ lib.optionals guiSupport [
+    gtk3
+  ] ++ lib.optionals (stdenv.isLinux && guiSupport) [
+    directfb
   ] ++ lib.optionals stdenv.isDarwin [
     # For unknown reasons the order is important, e.g. if
     # VideoToolbox is last, we get:
@@ -289,6 +292,7 @@ stdenv.mkDerivation rec {
     "-Dgs=disabled" # depends on `google-cloud-cpp`
     "-Donnx=disabled" # depends on `libonnxruntime` not packaged in nixpkgs as of writing
     "-Dopenaptx=enabled" # since gstreamer-1.20.1 `libfreeaptx` is supported for circumventing the dubious license conflict with `libopenaptx`
+    "-Dopencv=${if opencvSupport then "enabled" else "disabled"}" # Reduces rebuild size when `config.cudaSupport = true`
     "-Dmicrodns=${if microdnsSupport then "enabled" else "disabled"}"
     "-Dbluez=${if bluezSupport then "enabled" else "disabled"}"
     (lib.mesonEnable "doc" enableDocumentation)
@@ -297,10 +301,11 @@ stdenv.mkDerivation rec {
     "-Ddoc=disabled" # needs gstcuda to be enabled which is Linux-only
     "-Dnvcodec=disabled" # Linux-only
     "-Dva=disabled" # see comment on `libva` in `buildInputs`
+  ] ++ lib.optionals (!stdenv.isLinux || !guiSupport) [
+    "-Ddirectfb=disabled"
   ]
   ++ lib.optionals stdenv.isDarwin [
     "-Dchromaprint=disabled"
-    "-Ddirectfb=disabled"
     "-Dflite=disabled"
     "-Dkms=disabled" # renders to libdrm output
     "-Dlv2=disabled"
@@ -311,7 +316,6 @@ stdenv.mkDerivation rec {
     "-Duvch264=disabled" # requires gudev
     "-Dv4l2codecs=disabled" # requires gudev
     "-Dladspa=disabled" # requires lrdf
-    "-Dwildmidi=disabled" # see dependencies above
   ] ++ lib.optionals (!stdenv.isLinux || !stdenv.isx86_64) [
     "-Dqsv=disabled" # Linux (and Windows) x86 only
   ] ++ lib.optionals (!gst-plugins-base.glEnabled) [

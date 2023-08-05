@@ -50,13 +50,13 @@
 
 stdenv.mkDerivation rec {
   pname = "sdrangel";
-  version = "7.14.1";
+  version = "7.15.1";
 
   src = fetchFromGitHub {
     owner = "f4exb";
     repo = "sdrangel";
     rev = "v${version}";
-    hash = "sha256-AsKjsoIyGjGpRGA+pYQsO4x2C5Rb7xaG+Q0cS3xANcM=";
+    hash = "sha256-xOnToYe7+0Jlm4bWvnFbYxVi1VqBlGfKYdzHf4igyl0=";
   };
 
   nativeBuildInputs = [ cmake ninja pkg-config wrapQtAppsHook ];

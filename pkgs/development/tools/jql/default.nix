@@ -5,16 +5,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "jql";
-  version = "6.0.8";
+  version = "7.0.2";
 
   src = fetchFromGitHub {
     owner = "yamafaktory";
     repo = pname;
     rev = "jql-v${version}";
-    hash = "sha256-7z77QSYoCyVkvAApfxEXhsHo8NTK+OemLWwGgtqOqD8=";
+    hash = "sha256-lYm+zgZkt/iVJgehJM44VqWbcR4kqt8rUSEsnz07tbU=";
   };
 
-  cargoHash = "sha256-7WSUnBISuBlwJIuQVIOAU1p8dM2i78uwdLHt5ebh4h4=";
+  cargoHash = "sha256-Gav89ub4ccv/lCCqNYn9NvK4Q8udlu6YaZPhouHOVss=";
 
   meta = with lib; {
     description = "A JSON Query Language CLI tool built with Rust";

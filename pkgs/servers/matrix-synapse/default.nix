@@ -12,20 +12,20 @@ in
 with python3.pkgs;
 buildPythonApplication rec {
   pname = "matrix-synapse";
-  version = "1.84.1";
+  version = "1.89.0";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "matrix-org";
     repo = "synapse";
     rev = "v${version}";
-    hash = "sha256-6cUy3fAQoIFD7iL24vvlMj4S6s+68plemzH6GKkTGo0=";
+    hash = "sha256-ywDXjwYYCR0ojemRnShDmeoeUlDkpFH/ajFxV2DrR70=";
   };
 
   cargoDeps = rustPlatform.fetchCargoTarball {
     inherit src;
     name = "${pname}-${version}";
-    hash = "sha256-Rd2BJe4M3NVQJdkYDaiDhqKf4lXIKQyFwqMqVyMHog4=";
+    hash = "sha256-Atwa7yIA9kPsle0/DKQD30PJljVNArqWgau4Ueqzo94=";
   };
 
   postPatch = ''
@@ -92,15 +92,23 @@ buildPythonApplication rec {
     # remove src module, so tests use the installed module instead
     rm -rf ./synapse
 
+    # high parallelisem makes test suite unstable
+    # upstream uses 2 cores but 4 seems to be also stable
+    # https://github.com/matrix-org/synapse/blob/develop/.github/workflows/latest_deps.yml#L103
+    if (( $NIX_BUILD_CORES > 4)); then
+      NIX_BUILD_CORES=4
+    fi
+
     PYTHONPATH=".:$PYTHONPATH" ${python3.interpreter} -m twisted.trial -j $NIX_BUILD_CORES tests
 
     runHook postCheck
   '';
 
-  passthru.tests = { inherit (nixosTests) matrix-synapse; };
-  passthru.plugins = plugins;
-  passthru.tools = tools;
-  passthru.python = python3;
+  passthru = {
+    tests = { inherit (nixosTests) matrix-synapse; };
+    inherit plugins tools;
+    python = python3;
+  };
 
   meta = with lib; {
     homepage = "https://matrix.org";

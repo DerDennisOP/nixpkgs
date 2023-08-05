@@ -159,8 +159,7 @@ buildPythonPackage rec {
   nativeCheckInputs = [
     git
     glibcLocales
-    # "hypothesis" indirectly depends on twisted to build its documentation.
-    (hypothesis.override { enableDocumentation = false; })
+    hypothesis
     pyhamcrest
   ]
   ++ passthru.optional-dependencies.conch
@@ -203,6 +202,6 @@ buildPythonPackage rec {
     homepage = "https://github.com/twisted/twisted";
     description = "Asynchronous networking framework written in Python";
     license = licenses.mit;
-    maintainers = with maintainers; [ SuperSandro2000 ];
+    maintainers = with maintainers; [ ];
   };
 }

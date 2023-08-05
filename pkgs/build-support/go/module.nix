@@ -6,10 +6,7 @@
 , passthru ? { }
 , patches ? [ ]
 
-  # Go tags, passed to go via -tag
-, tags ? [ ]
-
-  # A function to override the go-modules derivation
+  # A function to override the goModules derivation
 , overrideModAttrs ? (_oldAttrs: { })
 
   # path to go.mod and go.sum directory
@@ -55,7 +52,7 @@ assert (args' ? vendorHash && args' ? vendorSha256) -> throw "both `vendorHash` 
 let
   args = removeAttrs args' [ "overrideModAttrs" "vendorSha256" "vendorHash" ];
 
-  go-modules = if (vendorHash == null) then "" else
+  goModules = if (vendorHash == null) then "" else
   (stdenv.mkDerivation {
     name = "${name}-go-modules";
 
@@ -166,10 +163,10 @@ let
       cd "$modRoot"
     '' + lib.optionalString (vendorHash != null) ''
       ${if proxyVendor then ''
-        export GOPROXY=file://${go-modules}
+        export GOPROXY=file://${goModules}
       '' else ''
         rm -rf vendor
-        cp -r --reflink=auto ${go-modules} vendor
+        cp -r --reflink=auto ${goModules} vendor
       ''}
     '' + ''
 
@@ -201,7 +198,7 @@ let
 
         declare -a flags
         flags+=($buildFlags "''${buildFlagsArray[@]}")
-        flags+=(''${tags:+-tags=${lib.concatStringsSep "," tags}})
+        flags+=(''${tags:+-tags=''${tags// /,}})
         flags+=(''${ldflags:+-ldflags="$ldflags"})
         flags+=("-p" "$NIX_BUILD_CORES")
 
@@ -291,7 +288,7 @@ let
 
     disallowedReferences = lib.optional (!allowGoReference) go;
 
-    passthru = passthru // { inherit go go-modules vendorHash; } // { inherit (args') vendorSha256; };
+    passthru = passthru // { inherit go goModules vendorHash; } // { inherit (args') vendorSha256; };
 
     meta = {
       # Add default meta information

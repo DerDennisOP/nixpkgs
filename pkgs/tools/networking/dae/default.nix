@@ -9,17 +9,17 @@
 }:
 buildGoModule rec {
   pname = "dae";
-  version = "0.2.3";
+  version = "0.2.4";
 
   src = fetchFromGitHub {
     owner = "daeuniverse";
     repo = "dae";
     rev = "v${version}";
-    hash = "sha256-Fk3xpQ8xuZMPulMFZb5fnN0Tisk13XRx49vBN5coanQ=";
+    hash = "sha256-MVmx37q5nbgaUehPJ2C2UjVyx48/U/vA3NeBx6Zcmg8=";
     fetchSubmodules = true;
   };
 
-  vendorHash = "sha256-sqcImm5BYTiUnBmcpWWMR1TuV877VE5gZ8Oth8AxjSg=";
+  vendorHash = "sha256-oeMAekLWRJzmkmge4LmrVSFRzHZ/dStX+CvLtuYOsog=";
 
   proxyVendor = true;
 
@@ -58,7 +58,8 @@ buildGoModule rec {
     description = "A Linux high-performance transparent proxy solution based on eBPF";
     homepage = "https://github.com/daeuniverse/dae";
     license = licenses.agpl3Only;
-    maintainers = with maintainers; [ oluceps ];
+    maintainers = with maintainers; [ oluceps pokon548 ];
     platforms = platforms.linux;
+    mainProgram = "dae";
   };
 }

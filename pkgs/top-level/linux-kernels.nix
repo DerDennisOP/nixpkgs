@@ -347,7 +347,6 @@ in {
     fwts-efi-runtime = callPackage ../os-specific/linux/fwts/module.nix { };
 
     gcadapter-oc-kmod = callPackage ../os-specific/linux/gcadapter-oc-kmod { };
-    hid-nintendo = callPackage ../os-specific/linux/hid-nintendo { };
 
     hyperv-daemons = callPackage ../os-specific/linux/hyperv-daemons { };
 
@@ -372,6 +371,8 @@ in {
     kvdo = callPackage ../os-specific/linux/kvdo {};
 
     lenovo-legion-module = callPackage ../os-specific/linux/lenovo-legion { };
+
+    linux-gpib = callPackage ../applications/science/electronics/linux-gpib/kernel.nix { };
 
     liquidtux = callPackage ../os-specific/linux/liquidtux {};
 
@@ -441,13 +442,14 @@ in {
     rtl8821cu = callPackage ../os-specific/linux/rtl8821cu { };
 
     rtw88 = callPackage ../os-specific/linux/rtw88 { };
-    rtlwifi_new = rtw88;
 
     rtw89 = if lib.versionOlder kernel.version "5.16" then callPackage ../os-specific/linux/rtw89 { } else null;
 
     openafs_1_8 = callPackage ../servers/openafs/1.8/module.nix { };
     # Current stable release; don't backport release updates!
     openafs = openafs_1_8;
+
+    opensnitch-ebpf = if lib.versionAtLeast kernel.version "5.10" then callPackage ../os-specific/linux/opensnitch-ebpf { } else null;
 
     facetimehd = callPackage ../os-specific/linux/facetimehd { };
 
@@ -556,6 +558,7 @@ in {
 
   } // lib.optionalAttrs config.allowAliases {
     ati_drivers_x11 = throw "ati drivers are no longer supported by any kernel >=4.1"; # added 2021-05-18;
+    hid-nintendo = throw "hid-nintendo was added in mainline kernel version 5.16"; # Added 2023-07-30
     sch_cake = throw "sch_cake was added in mainline kernel version 4.19"; # Added 2023-06-14
     rtl8723bs = throw "rtl8723bs was added in mainline kernel version 4.12"; # Added 2023-06-14
     xmm7360-pci = throw "Support for the XMM7360 WWAN card was added to the iosm kmod in mainline kernel version 5.18";

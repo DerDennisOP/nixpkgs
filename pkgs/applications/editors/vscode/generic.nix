@@ -2,7 +2,7 @@
 , unzip, libsecret, libXScrnSaver, libxshmfence, buildPackages
 , atomEnv, at-spi2-atk, autoPatchelfHook
 , systemd, fontconfig, libdbusmenu, glib, buildFHSEnv, wayland
-, libglvnd
+, libglvnd, libkrb5
 
 # Populate passthru.tests
 , tests
@@ -15,11 +15,7 @@
 , executableName, longName, shortName, pname, updateScript
 , dontFixup ? false
 , rev ? null, vscodeServer ? null
-
-# sourceExecutableName is the name of the binary in the source archive, over
-# which we have no control
 , sourceExecutableName ? executableName
-
 , useVSCodeRipgrep ? false
 , ripgrep
 }:
@@ -71,9 +67,9 @@ let
     };
 
     buildInputs = [ libsecret libXScrnSaver libxshmfence ]
-      ++ lib.optionals (!stdenv.isDarwin) ([ at-spi2-atk ] ++ atomEnv.packages);
+      ++ lib.optionals (!stdenv.isDarwin) ([ at-spi2-atk libkrb5 ] ++ atomEnv.packages);
 
-    runtimeDependencies = lib.optionals stdenv.isLinux [ (lib.getLib systemd) fontconfig.lib libdbusmenu wayland ];
+    runtimeDependencies = lib.optionals stdenv.isLinux [ (lib.getLib systemd) fontconfig.lib libdbusmenu wayland libsecret ];
 
     nativeBuildInputs = [ unzip ]
       ++ lib.optionals stdenv.isLinux [
@@ -115,9 +111,6 @@ let
       # The credentials should be stored in a secure keychain already, so the benefit of this is questionable
       # in the first place.
       rm -rf $out/lib/vscode/resources/app/node_modules/vscode-encrypt
-
-      # Unbundle libglvnd as VSCode doesn't include libGLESv2.so.2 which is necessary for GPU acceleration
-      rm -rf $out/lib/vscode/libGLESv2.so
     '') + ''
       runHook postInstall
     '';
@@ -126,7 +119,6 @@ let
       gappsWrapperArgs+=(
         # Add gio to PATH so that moving files to the trash works when not using a desktop environment
         --prefix PATH : ${glib.bin}/bin
-        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libglvnd ]}
         --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
         --add-flags ${lib.escapeShellArg commandLineArgs}
       )
@@ -160,6 +152,10 @@ let
     '' else ''
       chmod +x ${vscodeRipgrep}
     '');
+
+    postFixup = lib.optionalString stdenv.isLinux ''
+      patchelf --add-needed ${libglvnd}/lib/libGLESv2.so.2 $out/lib/vscode/${executableName}
+    '';
 
     inherit meta;
   };

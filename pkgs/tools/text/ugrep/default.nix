@@ -7,17 +7,18 @@
 , pcre2
 , xz
 , zlib
+, zstd
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ugrep";
-  version = "3.12.3";
+  version = "4.0.0";
 
   src = fetchFromGitHub {
     owner = "Genivia";
     repo = "ugrep";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-KP8SpeHGOdIKnA+xavdkoj3XRU572RZtFH0DaW28m+k=";
+    hash = "sha256-kRpHJl/ouYgvwFMk6uO4XobyT2kTCH9kLfeF70IqMuc=";
   };
 
   buildInputs = [
@@ -27,6 +28,7 @@ stdenv.mkDerivation (finalAttrs: {
     pcre2
     xz
     zlib
+    zstd
   ];
 
   meta = with lib; {

@@ -11,16 +11,16 @@
 
 buildPythonPackage rec {
   pname = "mkdocstrings-python";
-  version = "1.4.0";
+  version = "1.5.2";
   format = "pyproject";
 
-  disabled = pythonOlder "3.7";
+  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "mkdocstrings";
     repo = "python";
     rev = "refs/tags/${version}";
-    hash = "sha256-O4lKL7b85lbF04p8pZrtg5CSVLJQIsktNUn7HDdDYio=";
+    hash = "sha256-jfwyIx43s/zmIVOTDSIiQ8EYHUEHwRTwEa2SAfWy7HM=";
   };
 
   nativeBuildInputs = [

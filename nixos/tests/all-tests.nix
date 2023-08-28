@@ -345,10 +345,12 @@ in {
   hedgedoc = handleTest ./hedgedoc.nix {};
   herbstluftwm = handleTest ./herbstluftwm.nix {};
   homepage-dashboard = handleTest ./homepage-dashboard.nix {};
+  honk = runTest ./honk.nix;
   installed-tests = pkgs.recurseIntoAttrs (handleTest ./installed-tests {});
   invidious = handleTest ./invidious.nix {};
   oci-containers = handleTestOn ["aarch64-linux" "x86_64-linux"] ./oci-containers.nix {};
   odoo = handleTest ./odoo.nix {};
+  odoo15 = handleTest ./odoo.nix { package = pkgs.odoo15; };
   # 9pnet_virtio used to mount /nix partition doesn't support
   # hibernation. This test happens to work on x86_64-linux but
   # not on other platforms.
@@ -443,7 +445,7 @@ in {
   loki = handleTest ./loki.nix {};
   luks = handleTest ./luks.nix {};
   lvm2 = handleTest ./lvm2 {};
-  lxd = handleTest ./lxd {};
+  lxd = pkgs.recurseIntoAttrs (handleTest ./lxd {});
   lxd-image-server = handleTest ./lxd-image-server.nix {};
   #logstash = handleTest ./logstash.nix {};
   lorri = handleTest ./lorri/default.nix {};
@@ -672,6 +674,7 @@ in {
   rabbitmq = handleTest ./rabbitmq.nix {};
   radarr = handleTest ./radarr.nix {};
   radicale = handleTest ./radicale.nix {};
+  ragnarwm = handleTest ./ragnarwm.nix {};
   rasdaemon = handleTest ./rasdaemon.nix {};
   readarr = handleTest ./readarr.nix {};
   redis = handleTest ./redis.nix {};

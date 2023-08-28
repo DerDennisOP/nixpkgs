@@ -2960,6 +2960,8 @@ self: super: with self; {
 
   django-scopes = callPackage ../development/python-modules/django-scopes { };
 
+  django-simple-history = callPackage ../development/python-modules/django-simple-history { };
+  
   django-shortuuidfield = callPackage ../development/python-modules/django-shortuuidfield { };
 
   djangoql = callPackage ../development/python-modules/djangoql { };

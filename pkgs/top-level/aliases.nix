@@ -81,6 +81,7 @@ mapAliases ({
   amuleGui = throw "amuleGui was renamed to amule-gui"; # Added 2022-02-11
   amsn = throw "amsn has been removed due to being unmaintained"; # Added 2020-12-09
   angelfish = libsForQt5.kdeGear.angelfish; # Added 2021-10-06
+  angryipscanner = ipscan; # Added 2023-08-30
   ansible_2_12 = throw "Ansible 2.12 goes end of life in 2023/05 and can't be supported throughout the 23.05 release cycle"; # Added 2023-05-16
   ansible_2_11 = throw "Ansible 2.11 goes end of life in 2022/11 and can't be supported throughout the 22.05 release cycle"; # Added 2022-03-30
   ansible_2_10 = throw "Ansible 2.10 went end of life in 2022/05 and has subsequently been dropped"; # Added 2022-03-30
@@ -533,6 +534,7 @@ mapAliases ({
   flutter-beta = throw "Non-stable versions of Flutter have been removed. You can use flutterPackages.mkFlutter to generate a package for other Flutter versions"; # Added 2020-01-15
   flutter-dev = throw "Non-stable versions of Flutter have been removed. You can use flutterPackages.mkFlutter to generate a package for other Flutter versions"; # Added 2020-01-15
   flutter2 = throw "flutter2 has been removed because it isn't updated anymore, and no packages in nixpkgs use it. If you still need it, use flutter.mkFlutter to get a custom version"; # Added 2023-07-03
+  flutter37 = throw "flutter37 has been removed because it isn't updated anymore, and no packages in nixpkgs use it. If you still need it, use flutter.mkFlutter to get a custom version"; # Added 2023-07-03
   flvtool2 = throw "flvtool2 has been removed"; # Added 2020-11-03
   fme = throw "fme was removed, because it is old and uses Glade, a discontinued library"; # Added 2022-01-26
   foldingathome = fahclient; # Added 2020-09-03
@@ -973,6 +975,7 @@ mapAliases ({
   linuxPackages_6_2 = linuxKernel.packages.linux_6_2;
   linuxPackages_6_3 = linuxKernel.packages.linux_6_3;
   linuxPackages_6_4 = linuxKernel.packages.linux_6_4;
+  linuxPackages_6_5 = linuxKernel.packages.linux_6_5;
   linuxPackages_hardkernel_4_14 = linuxKernel.packages.hardkernel_4_14;
   linuxPackages_rpi0 = linuxKernel.packages.linux_rpi1;
   linuxPackages_rpi02w = linuxKernel.packages.linux_rpi3;
@@ -997,6 +1000,7 @@ mapAliases ({
   linux_6_2 = linuxKernel.kernels.linux_6_2;
   linux_6_3 = linuxKernel.kernels.linux_6_3;
   linux_6_4 = linuxKernel.kernels.linux_6_4;
+  linux_6_5 = linuxKernel.kernels.linux_6_5;
   linuxPackages_mptcp = throw "'linuxPackages_mptcp' has been moved to https://github.com/teto/mptcp-flake"; # Converted to throw 2022-10-04
   linux_mptcp = throw "'linux_mptcp' has been moved to https://github.com/teto/mptcp-flake"; # Converted to throw 2022-10-04
   linux_mptcp_95 = throw "'linux_mptcp_95' has been moved to https://github.com/teto/mptcp-flake"; # Converted to throw 2022-10-04

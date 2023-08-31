@@ -35,6 +35,7 @@ with pkgs;
   fetchurl = callPackages ../build-support/fetchurl/tests.nix { };
   fetchpatch = callPackages ../build-support/fetchpatch/tests.nix { };
   fetchpatch2 = callPackages ../build-support/fetchpatch/tests.nix { fetchpatch = fetchpatch2; };
+  fetchDebianPatch = callPackages ../build-support/fetchdebianpatch/tests.nix { };
   fetchzip = callPackages ../build-support/fetchzip/tests.nix { };
   fetchgit = callPackages ../build-support/fetchgit/tests.nix { };
   fetchFirefoxAddon = callPackages ../build-support/fetchfirefoxaddon/tests.nix { };
@@ -93,4 +94,6 @@ with pkgs;
   };
 
   pkgs-lib = recurseIntoAttrs (import ../pkgs-lib/tests { inherit pkgs; });
+
+  nixpkgs-check-by-name = callPackage ./nixpkgs-check-by-name { };
 }

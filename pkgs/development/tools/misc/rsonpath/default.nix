@@ -7,16 +7,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "rsonpath";
-  version = "0.6.1";
+  version = "0.7.1";
 
   src = fetchFromGitHub {
     owner = "v0ldek";
     repo = "rsonpath";
     rev = "v${version}";
-    hash = "sha256-3ncaO7B3e4F2LFj1IjHvOyoWXBYQM69vPfPnsBr+tKI=";
+    hash = "sha256-ip5phYOoUm7I0SsnfXVGzgt+OFXjXKt4hiFjH3nkacA=";
   };
 
-  cargoHash = "sha256-EjifSABhowk3PSQTuAm8+xRYbc0OwdqHMb9o/z1yuP0=";
+  cargoHash = "sha256-T2aR3PCQ5BcJZ+Aw/yLJ6vbLxkrKrNnsZkXwo0G9BZE=";
 
   buildNoDefaultFeatures = !withSimd;
 

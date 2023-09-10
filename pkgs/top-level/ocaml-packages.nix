@@ -730,7 +730,7 @@ let
       if lib.versionOlder "4.13.1" ocaml.version
       then import ../development/ocaml-modules/janestreet/0.16.nix {
         inherit self;
-        inherit (pkgs) bash fetchpatch fzf lib openssl zstd;
+        inherit (pkgs) bash fetchpatch fzf lib openssl zstd krb5;
       }
       else if lib.versionOlder "4.10.2" ocaml.version
       then import ../development/ocaml-modules/janestreet/0.15.nix {
@@ -1926,6 +1926,8 @@ in let inherit (pkgs) callPackage; in rec
   ocamlPackages_4_14 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.14.nix { });
 
   ocamlPackages_5_0 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.0.nix { });
+
+  ocamlPackages_5_1 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.1.nix { });
 
   ocamlPackages_latest = ocamlPackages_5_0;
 

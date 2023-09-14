@@ -283,12 +283,12 @@ let
       });
 
       zeroconf = super.zeroconf.overridePythonAttrs (oldAttrs: rec {
-        version = "0.91.1";
+        version = "0.98.0";
         src = fetchFromGitHub {
           owner = "python-zeroconf";
           repo = "python-zeroconf";
           rev = "refs/tags/${version}";
-          hash = "sha256-HHADcxXjfukRJtqRjfKI/spZIqOfDT0Etg4oYzNdXIs=";
+          hash = "sha256-oajSXGQTsJsajRAnS/MkkbSyxTeVvdjvw1eiJaPzZMY=";
         };
       });
 
@@ -316,7 +316,7 @@ let
   extraBuildInputs = extraPackages python.pkgs;
 
   # Don't forget to run parse-requirements.py after updating
-  hassVersion = "2023.9.0";
+  hassVersion = "2023.9.2";
 
 in python.pkgs.buildPythonApplication rec {
   pname = "homeassistant";
@@ -332,7 +332,7 @@ in python.pkgs.buildPythonApplication rec {
   # Primary source is the pypi sdist, because it contains translations
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-XdZYVv60ZCkK0fKmt2kmThRxhv+hfJMtHwgBu3iaW9w=";
+    hash = "sha256-pVW9NQYEf2pmGCp342lCzEiWfAyFCiWeRMVbhPd8wxQ=";
   };
 
   # Secondary source is git for tests
@@ -340,7 +340,7 @@ in python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     rev = "refs/tags/${version}";
-    hash = "sha256-B+GdUXRvQyBMR7PbVGEZr7hZm7wslBskUTB23APJLIU=";
+    hash = "sha256-4sZBrGd5gz4W7c7Ok5Bj/47MaXAqAFC4qufcidbU5zA=";
   };
 
   nativeBuildInputs = with python.pkgs; [

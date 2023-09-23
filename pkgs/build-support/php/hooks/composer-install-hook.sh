@@ -41,7 +41,7 @@ composerInstallBuildHook() {
 
     # Since this file cannot be generated in the composer-repository-hook.sh
     # because the file contains hardcoded nix store paths, we generate it here.
-    composer-local-repo-plugin --no-ansi build-local-repo -p "${composerRepository}" > packages.json
+    composer-local-repo-plugin --no-ansi build-local-repo -m "${composerRepository}" .
 
     # Remove all the repositories of type "composer"
     # from the composer.json file.
@@ -106,7 +106,7 @@ composerInstallInstallHook() {
     # Create symlinks for the binaries.
     jq -r -c 'try .bin[]' composer.json | while read -r bin; do
         mkdir -p "$out"/share/php/"${pname}" "$out"/bin
-        ln -s "$out"/share/php/"${pname}"/"$bin" "$out"/bin/"$(basename "$bin")"
+        makeWrapper "$out"/share/php/"${pname}"/"$bin" "$out"/bin/"$(basename "$bin")"
     done
 
     echo "Finished composerInstallInstallHook"

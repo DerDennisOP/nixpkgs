@@ -34,8 +34,12 @@ rustPlatform.buildRustPackage rec {
 
   OPENSSL_NO_VENDOR = true;
 
-  # Integration tests require root.
-  cargoTestFlags = [ "--bins" ];
+  cargoTestFlags = [
+    "--workspace"
+    "--bins" "--lib" # Integration tests require root.
+    "--exclude" "net_util" # /dev/net/tun
+    "--exclude" "vmm"      # /dev/kvm
+  ];
 
   meta = with lib; {
     homepage = "https://github.com/cloud-hypervisor/cloud-hypervisor";

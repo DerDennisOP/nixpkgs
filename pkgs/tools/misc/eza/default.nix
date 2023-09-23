@@ -17,16 +17,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "eza";
-  version = "0.11.1";
+  version = "0.13.0";
 
   src = fetchFromGitHub {
     owner = "eza-community";
     repo = "eza";
     rev = "v${version}";
-    hash = "sha256-Wboe1ww15GVlL9crNMbVHJnlXghcGM7fL5We2+PFII8=";
+    hash = "sha256-EvNdE9SYO8+DEJoIxJEh3Fy/+AbtoAyUrOnZtd23K7Q=";
   };
 
-  cargoHash = "sha256-uUUzyDGTYF6hKmP0Wno/btjhC1RjyqdkWu4torGwA0g=";
+  cargoHash = "sha256-1QluALqSwu49/oz89m3KDDgGo91lqOj+WDP8erGmA/8=";
 
   nativeBuildInputs = [ cmake pkg-config installShellFiles pandoc ];
   buildInputs = [ zlib ]
@@ -64,7 +64,7 @@ rustPlatform.buildRustPackage rec {
     changelog = "https://github.com/eza-community/eza/releases/tag/v${version}";
     license = licenses.mit;
     mainProgram = "eza";
-    maintainers = with maintainers; [ cafkafk ];
+    maintainers = with maintainers; [ cafkafk _9glenda ];
     platforms = platforms.unix ++ platforms.windows;
   };
 }

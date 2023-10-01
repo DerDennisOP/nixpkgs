@@ -37,7 +37,6 @@
   fkill-cli = "fkill";
   fleek-cli = "fleek";
   git-run = "gr";
-  gitmoji-cli = "gitmoji";
   graphql-cli = "graphql";
   graphql-language-service-cli = "graphql-lsp";
   grunt-cli = "grunt";
@@ -53,8 +52,6 @@
   prettier = "prettier";
   purescript-psa = "psa";
   purs-tidy = "purs-tidy";
-  react-native-cli = "react-native";
-  react-tools = "jsx";
   remod-cli = "remod";
   svelte-language-server = "svelteserver";
   teck-programmer = "teck-firmware-upgrade";

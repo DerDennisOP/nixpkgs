@@ -496,6 +496,7 @@ mapAliases ({
   erlang_23 = throw "erlangR23 has been removed in favor of newer versions."; # added 2023-09-11
   erlangR23 = erlang_23;
   esniper = throw "esniper has been removed because upstream no longer maintains it (and it no longer works)"; # Added 2021-04-12
+  etcd_3_3 = throw "etcd_3_3 has been removed because upstream no longer maintains it"; # Added 2023-09-29
   etcdctl = throw "'etcdctl' has been renamed to/replaced by 'etcd'"; # Converted to throw 2022-02-22
   eterm = throw "eterm was removed because it is still insecure: https://github.com/mej/Eterm/issues/7"; # Added 2023-09-10
   eteroj.lv2 = throw "'eteroj.lv2' has been renamed to/replaced by 'open-music-kontrollers.eteroj'"; # Added 2022-03-09
@@ -687,11 +688,9 @@ mapAliases ({
   gpgstats = throw "gpgstats has been removed: upstream is gone"; # Added 2022-02-06
   gpshell = throw "gpshell has been removed, because it was unmaintained in nixpkgs"; # added 2021-12-17
 
-  graalvm11 = graalvm11-ce;
-  graalvm8-ce = throw "graalvm8-ce has been removed by upstream"; # Added 2021-10-19
-  graalvm8 = throw "graalvm8-ce has been removed by upstream"; # Added 2021-10-19
-  graalvm8-ee = throw "graalvm8-ee has been removed because it is unmaintained"; # Added 2022-04-15
-  graalvm11-ee = throw "graalvm11-ee has been removed because it is unmaintained"; # Added 2022-04-15
+  graalvm11-ce = throw "graalvm11-ce has been removed because upstream dropped support to different JDK versions for each GraalVM release. Please use graalvm-ce instead"; # Added 2023-09-26
+  graalvm17-ce = throw "graalvm17-ce has been removed because upstream dropped support to different JDK versions for each GraalVM release. Please use graalvm-ce instead"; # Added 2023-09-26
+  graalvm19-ce = throw "graalvm19-ce has been removed because upstream dropped support to different JDK versions for each GraalVM release. Please use graalvm-ce instead"; # Added 2023-09-26
   gradio = throw "gradio has been removed because it is unmaintained, use shortwave instead"; # Added 2022-06-03
   gradle_4 = throw "gradle_4 has been removed because it's no longer being updated"; # Added 2023-01-17
   gradle_5 = throw "gradle_5 has been removed because it's no longer being updated"; # Added 2023-01-17
@@ -1183,6 +1182,7 @@ mapAliases ({
   nccl_cudatoolkit_11 = throw "nccl_cudatoolkit_11 has been renamed to cudaPackages_11.nccl"; # Added 2022-04-04
 
   net_snmp = throw "'net_snmp' has been renamed to/replaced by 'net-snmp'"; # Converted to throw 2023-09-10
+  netbox_3_3 = throw "netbox 3.3 series has been removed as it was EOL"; # Added 2023-09-02
   nagiosPluginsOfficial = monitoring-plugins;
   navit = throw "navit has been removed from nixpkgs, due to being unmaintained"; # Added 2021-06-07
   ncat = throw "'ncat' has been renamed to/replaced by 'nmap'"; # Converted to throw 2022-02-22
@@ -1254,6 +1254,8 @@ mapAliases ({
   ocropus = throw "ocropus has been removed: abandoned by upstream"; # Added 2022-04-24
   octoprint-plugins = throw "octoprint-plugins are now part of the octoprint.python.pkgs package set"; # Added 2021-01-24
   ocz-ssd-guru = throw "ocz-ssd-guru has been removed due to there being no source available"; # Added 2021-07-12
+  octant = throw "octant has been dropped due to being archived and vulnerable"; # Added 2023-09-29
+  octant-desktop = throw "octant-desktop has been dropped due to being archived and vulnerable"; # Added 2023-09-29
   odpdown = throw "odpdown has been removed because it lacks python3 support"; # Added 2022-04-25
   ofp = throw "ofp is not compatible with odp-dpdk";
   ogre1_9 = throw "ogre1_9 has been removed, use ogre instead"; # Added 2023-03-22
@@ -1266,6 +1268,7 @@ mapAliases ({
   openbazaar = throw "openbazzar has been removed from nixpkgs as upstream has abandoned the project"; # Added 2022-01-06
   openbazaar-client = throw "openbazzar-client has been removed from nixpkgs as upstream has abandoned the project"; # Added 2022-01-06
   opencascade_oce = throw "'opencascade_oce' has been renamed to/replaced by 'opencascade'"; # Converted to throw 2022-02-22
+  opencascade = throw "'opencascade' has been removed as it is unmaintained; consider opencascade-occt instead'"; # Added 2023-09-18
   opencl-icd = throw "'opencl-icd' has been renamed to/replaced by 'ocl-icd'"; # Converted to throw 2022-02-22
   openconnect_head = openconnect_unstable; # Added 2022-03-29
   openconnect_gnutls = openconnect; # Added 2022-03-29
@@ -1469,6 +1472,7 @@ mapAliases ({
   protobuf3_7 = throw "protobuf3_7 does not receive updates anymore and has been removed"; # Added 2022-10-03
   protobuf3_11 = throw "protobuf3_11 does not receive updates anymore and has been removed"; # Added 2022-09-28
   protobuf3_17 = throw "protobuf3_17 does not receive updates anymore and has been removed"; # Added 2023-05-21
+  protobuf3_19 = throw "protobuf3_19 does not receive updates anymore and has been removed"; # Added 2023-10-01
   protonup = protonup-ng; # Added 2022-11-06
   proxmark3-rrg = proxmark3; # Added 2023-07-25
   proxmark3-unstable = throw "removed in favor of rfidresearchgroup fork"; # Added 2023-07-25
@@ -1579,6 +1583,7 @@ mapAliases ({
   robomongo = throw "'robomongo' has been renamed to/replaced by 'robo3t'"; # Converted to throw 2022-02-22
   rockbox_utility = rockbox-utility; # Added 2022-03-17
   rocm-runtime-ext = throw "rocm-runtime-ext has been removed, since its functionality was added to rocm-runtime"; #added 2020-08-21
+  rome = throw "rome is no longer maintained, consider using biome instead"; # Added 2023-09-12
   rpiboot-unstable = rpiboot; # Added 2021-07-30
   rr-unstable = rr; # Added 2022-09-17
   rssglx = throw "'rssglx' has been renamed to/replaced by 'rss-glx'"; # Converted to throw 2022-02-22
@@ -1654,6 +1659,7 @@ mapAliases ({
   slurm-llnl = slurm; # renamed July 2017
   slurm-llnl-full = slurm-full; # renamed July 2017
   smbclient = throw "'smbclient' has been renamed to/replaced by 'samba'"; # Converted to throw 2022-02-22
+  smesh = throw "'smesh' has been removed as it's unmaintained and depends on opencascade-oce, which is also unmaintained"; # Added 2023-09-18
   smugline = throw "smugline has been removed from nixpkgs, as it's unmaintained and depends on deprecated libraries"; # Added 2020-11-04
   snack = throw "snack has been removed: broken for 5+ years"; # Added 2022-04-21
   soldat-unstable = opensoldat; # Added 2022-07-02
@@ -1718,6 +1724,7 @@ mapAliases ({
   ssmtp = throw "'ssmtp' has been removed due to the software being unmaintained. 'msmtp' can be used as a replacement"; # Added 2022-04-17
   ssr = throw "ssr has been removed, because it was unmaintained in nixpkgs and depended on qt4"; # Added 2022-05-26
   stanchion = throw "Stanchion was part of riak-cs which is not maintained anymore"; # added 2020-10-14
+  starboard-octant-plugin = throw "starboard-octant-plugin has been dropped due to needing octant which is archived"; # Added 2023-09-29
   steam-run-native = steam-run; # added 2022-02-21
   stride = throw "'stride' aka. Atlassian Stride is dead since 2019 (bought by Slack)"; # added 2022-06-15
   structure-synth = throw "structure-synth has been removed, because it was unmaintained"; # Added 2022-05-09
@@ -1793,7 +1800,8 @@ mapAliases ({
   tomcat8 = throw "tomcat8 has been removed from nixpkgs as it has reached end of life"; # Added 2021-06-16
   tomcat85 = throw "tomcat85 has been removed from nixpkgs as it has reached end of life"; # Added 2020-03-11
   tor-arm = throw "tor-arm has been removed from nixpkgs as the upstream project has been abandoned"; # Added 2022-01-01
-  torbrowser = throw "'torbrowser' has been renamed to/replaced by 'tor-browser-bundle-bin'"; # Converted to throw 2022-02-22
+  tor-browser-bundle-bin = tor-browser; # Added 2023-09-23
+  torbrowser = throw "'torbrowser' has been renamed to/replaced by 'tor-browser'"; # Converted to throw 2022-02-22
   torch = throw "torch has been removed, as the upstream project has been abandoned"; # Added 2020-03-28
   torch-hdf5 = throw "torch-hdf5 has been removed, as the upstream project has been abandoned"; # Added 2020-03-28
   torch-repl = throw "torch-repl has been removed, as the upstream project has been abandoned"; # Added 2020-03-28
@@ -1844,6 +1852,7 @@ mapAliases ({
   urxvt_vtwheel = rxvt-unicode-plugins.vtwheel; # Added 2020-02-02
   usb_modeswitch = throw "'usb_modeswitch' has been renamed to/replaced by 'usb-modeswitch'"; # Converted to throw 2022-02-22
   usbguard-nox = throw "'usbguard-nox' has been renamed to/replaced by 'usbguard'"; # Converted to throw 2023-09-10
+  utahfs = throw "utahfs has been removed, as it is broken and lack of maintenance from upstream"; # Added 2023-09-29
   util-linuxCurses = util-linux; # Added 2022-04-12
   utillinux = util-linux; # Added 2020-11-24
 
@@ -2050,8 +2059,8 @@ mapAliases ({
   posix_man_pages = man-pages-posix; # Added 2021-04-15
   sqldeveloper_18 = throw "sqldeveloper_18 is not maintained anymore!"; # Added 2020-02-04
   todolist = throw "todolist is now ultralist"; # Added 2020-12-27
-  tor-browser-bundle = throw "tor-browser-bundle was removed because it was out of date and inadequately maintained. Please use tor-browser-bundle-bin instead"; # Added 2020-01-10
-  tor-browser-unwrapped = throw "tor-browser-unwrapped was removed because it was out of date and inadequately maintained. Please use tor-browser-bundle-bin instead"; # Added 2020-01-10
+  tor-browser-bundle = throw "tor-browser-bundle was removed because it was out of date and inadequately maintained. Please use tor-browser instead"; # Added 2020-01-10
+  tor-browser-unwrapped = throw "tor-browser-unwrapped was removed because it was out of date and inadequately maintained. Please use tor-browser instead"; # Added 2020-01-10
   torchat = throw "torchat was removed because it was broken and requires Python 2"; # added 2022-06-05
   ttyrec = ovh-ttyrec; # Added 2021-01-02
   zplugin = zinit; # Added 2021-01-30

@@ -1286,6 +1286,7 @@
   ./services/web-apps/powerdns-admin.nix
   ./services/web-apps/prosody-filer.nix
   ./services/web-apps/restya-board.nix
+  ./services/web-apps/rimgo.nix
   ./services/web-apps/sftpgo.nix
   ./services/web-apps/rss-bridge.nix
   ./services/web-apps/selfoss.nix
@@ -1302,6 +1303,7 @@
   ./services/web-apps/writefreely.nix
   ./services/web-apps/youtrack.nix
   ./services/web-apps/zabbix.nix
+  ./services/web-apps/zitadel.nix
   ./services/web-servers/agate.nix
   ./services/web-servers/apache-httpd/default.nix
   ./services/web-servers/caddy/default.nix

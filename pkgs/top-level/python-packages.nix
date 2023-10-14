@@ -2223,6 +2223,8 @@ self: super: with self; {
 
   compiledb = callPackage ../development/python-modules/compiledb { };
 
+  complycube = callPackage ../development/python-modules/complycube { };
+
   compreffor = callPackage ../development/python-modules/compreffor { };
 
   concurrent-log-handler = callPackage ../development/python-modules/concurrent-log-handler { };
@@ -2870,6 +2872,8 @@ self: super: with self; {
 
   django-allauth = callPackage ../development/python-modules/django-allauth { };
 
+  django-allauth-2fa = callPackage ../development/python-modules/django-allauth-2fa { };
+
   django-anymail = callPackage ../development/python-modules/django-anymail { };
 
   django-annoying = callPackage ../development/python-modules/django-annoying { };
@@ -2927,6 +2931,8 @@ self: super: with self; {
   django-csp = callPackage ../development/python-modules/django-csp { };
 
   django-debug-toolbar = callPackage ../development/python-modules/django-debug-toolbar { };
+
+  django-dynamic-fixture = callPackage ../development/python-modules/django-dynamic-fixture { };
 
   django-dynamic-preferences = callPackage ../development/python-modules/django-dynamic-preferences { };
 
@@ -3028,6 +3034,8 @@ self: super: with self; {
 
   django-prometheus = callPackage ../development/python-modules/django-prometheus { };
 
+  django-pwa = callPackage ../development/python-modules/django-pwa { };
+
   django-q = callPackage ../development/python-modules/django-q { };
 
   django-scheduler = callPackage ../development/python-modules/django-scheduler { };
@@ -3035,6 +3043,8 @@ self: super: with self; {
   django-scim2 = callPackage ../development/python-modules/django-scim2 { };
 
   django-scopes = callPackage ../development/python-modules/django-scopes { };
+
+  django-shortuuidfield = callPackage ../development/python-modules/django-shortuuidfield { };
 
   djangoql = callPackage ../development/python-modules/djangoql { };
 
@@ -3104,7 +3114,9 @@ self: super: with self; {
 
   django-timezone-field = callPackage ../development/python-modules/django-timezone-field { };
 
-  django-treebeard = callPackage ../development/python-modules/django-treebeard { };
+  django-twilio = callPackage ../development/python-modules/django-twilio { };
+
+  django_treebeard = callPackage ../development/python-modules/django_treebeard { };
 
   django-two-factor-auth = callPackage ../development/python-modules/django-two-factor-auth { };
 

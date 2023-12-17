@@ -18,6 +18,11 @@ let
 
     nativeCheckInputs = [ twisted ];
 
+    postPatch = ''
+      substituteInPlace setup.py \
+        --replace "version=versioneer.get_version()" "version=\"${version}\""
+    '';
+
     checkPhase = ''
       trial constantly
     '';

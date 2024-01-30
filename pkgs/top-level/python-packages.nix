@@ -2814,6 +2814,8 @@ self: super: with self; {
 
   deprecation = callPackage ../development/python-modules/deprecation { };
 
+  depthai = callPackage ../development/python-modules/depthai { };
+
   derpconf = callPackage ../development/python-modules/derpconf { };
 
   desktop-entry-lib = callPackage ../development/python-modules/desktop-entry-lib { };

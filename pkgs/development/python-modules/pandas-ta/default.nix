@@ -11,7 +11,6 @@
   setuptools,
   six,
   ta-lib-python,
-  types-pkg-resources,
 }:
 
 buildPythonPackage rec {
@@ -34,8 +33,8 @@ buildPythonPackage rec {
     pandas
     python-dateutil
     pytz
+    setuptools
     six
-    types-pkg-resources
   ];
 
   # nativeCheckInputs = [

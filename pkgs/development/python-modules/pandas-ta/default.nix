@@ -15,7 +15,7 @@
 
 buildPythonPackage rec {
   pname = "pandas-ta";
-  version = "0.23.86";
+  version = "0.3.14";
   pyproject = true;
   build-system = [ setuptools ];
 
@@ -24,9 +24,14 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "twopirllc";
     repo = "pandas-ta";
-    rev = "refs/tags/v${version}";
-    hash = "sha256-JIwtAtP2TpnPG/KHHtuuLZxAiwllAG0J6paAy/AS80c=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-1s4/u0oN596VIJD94Tb0am3P+WGosRv9ihD+OIMdIBE=";
   };
+
+  postPatch = ''
+    substituteInPlace pandas_ta/momentum/squeeze_pro.py \
+      --replace-fail "import NaN" "import nan"
+  '';
 
   dependencies = [
     numpy
@@ -37,17 +42,17 @@ buildPythonPackage rec {
     six
   ];
 
-  # nativeCheckInputs = [
-  #   pytestCheckHook
-  #   ta-lib-python
-  # ];
+  nativeCheckInputs = [
+    # pytestCheckHook
+    # ta-lib-python
+  ];
 
   pythonImportsCheck = [ "pandas_ta" ];
 
   meta = {
     description = "Technical Analysis Indicators";
     homepage = "https://github.com/twopirllc/pandas-ta";
-    changelog = "https://github.com/pennersr/django-allauth/blob/${version}";
+    changelog = "https://github.com/twopirllc/pandas-ta/blob/${version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ derdennisop ];
   };

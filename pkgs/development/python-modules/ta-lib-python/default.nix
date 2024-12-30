@@ -44,7 +44,7 @@ buildPythonPackage rec {
   meta = {
     description = "Python wrapper for TA-Lib";
     homepage = "https://github.com/TA-Lib/ta-lib-python";
-    changelog = "https://github.com/TA-Lib/ta-lib-python/releases/tag/TA_Lib-${version}";
+    changelog = "https://github.com/TA-Lib/ta-lib-python/blob/TA_Lib-${version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ derdennisop ];
   };

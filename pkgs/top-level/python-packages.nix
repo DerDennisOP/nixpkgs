@@ -15384,6 +15384,8 @@ self: super: with self; {
 
   syrupy = callPackage ../development/python-modules/syrupy { };
 
+  ta-lib-python = callPackage ../development/python-modules/ta-lib-python { };
+
   tabcmd = callPackage ../development/python-modules/tabcmd { };
 
   tableaudocumentapi = callPackage ../development/python-modules/tableaudocumentapi { };

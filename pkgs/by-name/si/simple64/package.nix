@@ -15,6 +15,8 @@
   hidapi,
   qt6,
   vulkan-loader,
+  makeDesktopItem,
+  copyDesktopItems,
 }:
 
 let
@@ -25,13 +27,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "simple64";
-  version = "2024.09.1";
+  version = "2024.11.1";
 
   src = fetchFromGitHub {
     owner = "simple64";
     repo = "simple64";
     rev = "refs/tags/v${finalAttrs.version}";
-    hash = "sha256-t3V7mvHlCP8cOvizR3N9DiCofnSvSHI6U0iXXkaMb34=";
+    hash = "sha256-wWBW+iYPY+5C3pvyyFYb4iIK8GlAyCbaAzr2Q5RL+n8=";
   };
 
   patches = [
@@ -51,6 +53,7 @@ stdenv.mkDerivation (finalAttrs: {
     ninja
     pkg-config
     makeWrapper
+    copyDesktopItems
     # fake git command for version info generator
     (writeShellScriptBin "git" "echo ${finalAttrs.src.rev}")
   ];
@@ -84,12 +87,30 @@ stdenv.mkDerivation (finalAttrs: {
     mkdir -p $out/share/simple64 $out/bin
     cp -r simple64/* $out/share/simple64
 
+    install -Dm644 ./simple64-gui/icons/simple64.svg -t $out/share/icons/hicolor/scalable/apps/
+
     makeWrapper $out/share/simple64/simple64-gui $out/bin/simple64-gui \
         --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ vulkan-loader ]} \
         "''${qtWrapperArgs[@]}"
 
     runHook postInstall
   '';
+
+  desktopItems = [
+    (makeDesktopItem {
+      name = "simple64";
+      desktopName = "simple64";
+      genericName = "Nintendo 64 Emulator";
+      exec = "simple64-gui";
+      mimeTypes = [ "application/x-n64-rom" ];
+      icon = "simple64";
+      terminal = false;
+      categories = [
+        "Game"
+        "Emulator"
+      ];
+    })
+  ];
 
   meta = {
     description = "Easy to use N64 emulator";

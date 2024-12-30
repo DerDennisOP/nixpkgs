@@ -1,12 +1,16 @@
-{ lib, stdenvNoCC, fetchzip }:
+{
+  lib,
+  stdenvNoCC,
+  fetchzip,
+}:
 
-stdenvNoCC.mkDerivation rec {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "hackgen-nf-font";
-  version = "2.9.0";
+  version = "2.10.0";
 
   src = fetchzip {
-    url = "https://github.com/yuru7/HackGen/releases/download/v${version}/HackGen_NF_v${version}.zip";
-    hash = "sha256-Lh4WQJjeP4JuR8jSXpRNSrjRsNPmNXSx5AItNYMJL2A=";
+    url = "https://github.com/yuru7/HackGen/releases/download/v${finalAttrs.version}/HackGen_NF_v${finalAttrs.version}.zip";
+    hash = "sha256-n0ibIzNIy5tUdC0QEWRRW4S5Byih39agW2IxCiqTLoQ=";
   };
 
   installPhase = ''
@@ -17,11 +21,11 @@ stdenvNoCC.mkDerivation rec {
     runHook postInstall
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Composite font of Hack, GenJyuu-Gothic and nerd-fonts";
     homepage = "https://github.com/yuru7/HackGen";
-    license = licenses.ofl;
-    platforms = platforms.all;
-    maintainers = with maintainers; [ natsukium ];
+    license = lib.licenses.ofl;
+    platforms = lib.platforms.all;
+    maintainers = with lib.maintainers; [ natsukium ];
   };
-}
+})

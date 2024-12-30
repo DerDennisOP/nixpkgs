@@ -18,7 +18,7 @@ let
   llvmPackages = llvmPackages_18;
   stdenv = llvmPackages.stdenv;
 
-  version = "8.0.14";
+  version = "8.6.1";
 
   hasI686 =
     (if targets == [ ] then stdenv.hostPlatform.isx86_32 else (builtins.elem "i686" targets))
@@ -64,7 +64,7 @@ stdenv.mkDerivation {
   # Packaging that in Nix is very cumbersome.
   src = fetchurl {
     url = "https://github.com/limine-bootloader/limine/releases/download/v${version}/limine-${version}.tar.gz";
-    hash = "sha256-tj8wFUFveGp10Ls4xWIqqdY6fUHWy3jxsVeJRTz7/9Q=";
+    hash = "sha256-T64ydpYz299SHDEY0L0gOb4xwRpOQkGv8RIjl9j/5Ew=";
   };
 
   hardeningDisable = [

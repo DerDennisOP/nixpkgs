@@ -6,7 +6,7 @@
 , coreutils
 , gnugrep
 , perl
-, ninja
+, ninja_1_11
 , pkg-config
 , clang
 , bintools
@@ -189,6 +189,14 @@ let
         $out/lib/swift/
     '';
   };
+
+  # https://github.com/NixOS/nixpkgs/issues/327836
+  # Fail to build with ninja 1.12 when NIX_BUILD_CORES is low (Hydra or Github Actions).
+  # Can reproduce using `nix --option cores 2 build -f . swiftPackages.swift-unwrapped`.
+  # Until we find out the exact cause, follow [swift upstream][1], pin ninja to version
+  # 1.11.1.
+  # [1]: https://github.com/swiftlang/swift/pull/72989
+  ninja = ninja_1_11;
 
 in stdenv.mkDerivation {
   pname = "swift";
@@ -533,7 +541,7 @@ in stdenv.mkDerivation {
     ";
     buildProject lldb llvm-project/lldb
 
-    ${lib.optionalString stdenv.hostPlatform.isDarwin ''
+    ${lib.optionalString stdenv.targetPlatform.isDarwin ''
     # Need to do a standalone build of concurrency for Darwin back deployment.
     # Based on: utils/swift_build_support/swift_build_support/products/backdeployconcurrency.py
     cmakeFlags="

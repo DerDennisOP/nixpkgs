@@ -1,29 +1,31 @@
-{ stdenv
-, lib
-, callPackage
-, fetchFromGitHub
-, fetchPypi
-, python312
-, substituteAll
-, ffmpeg-headless
-, inetutils
-, nixosTests
-, home-assistant
-, testers
+{
+  stdenv,
+  lib,
+  callPackage,
+  fetchFromGitHub,
+  fetchPypi,
+  python312,
+  substituteAll,
+  ffmpeg-headless,
+  inetutils,
+  nixosTests,
+  home-assistant,
+  testers,
 
-# Look up dependencies of specified components in component-packages.nix
-, extraComponents ? [ ]
+  # Look up dependencies of specified components in component-packages.nix
+  extraComponents ? [ ],
 
-# Additional packages to add to propagatedBuildInputs
-, extraPackages ? ps: []
+  # Additional packages to add to propagatedBuildInputs
+  extraPackages ? ps: [ ],
 
-# Override Python packages using
-# self: super: { pkg = super.pkg.overridePythonAttrs (oldAttrs: { ... }); }
-# Applied after defaultOverrides
-, packageOverrides ? self: super: {}
+  # Override Python packages using
+  # self: super: { pkg = super.pkg.overridePythonAttrs (oldAttrs: { ... }); }
+  # Applied after defaultOverrides
+  packageOverrides ? self: super: { },
 
-# Skip pip install of required packages on startup
-, skipPip ? true }:
+  # Skip pip install of required packages on startup
+  skipPip ? true,
+}:
 
 let
   defaultOverrides = [
@@ -95,7 +97,7 @@ let
             --replace-fail "poetry>=1.0.0b1" "poetry-core" \
             --replace-fail "poetry.masonry" "poetry.core.masonry"
         '';
-        propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ]) ++ [
           self.pytz
         ];
       });
@@ -212,7 +214,7 @@ let
           rev = "refs/tags/v${version}";
           hash = "sha256-kIE3y/qlsO9Y1MjEQcX0pfaBeIzCCHk4f1Xa215BBHo=";
         };
-        dependencies = oldAttrs.propagatedBuildInputs or [] ++ [
+        dependencies = oldAttrs.propagatedBuildInputs or [ ] ++ [
           self.pytz
         ];
       });
@@ -223,6 +225,30 @@ let
           inherit (oldAttrs.src) owner repo;
           rev = "refs/tags/v${version}";
           hash = "sha256-KM/gtpsQ27QZz2uI1t/yVN5no0zp9LZag1duAJzK55g=";
+        };
+      });
+
+      pylamarzocco = super.pylamarzocco.overridePythonAttrs (oldAttrs: rec {
+        version = "1.2.12";
+        src = fetchFromGitHub {
+          owner = "zweckj";
+          repo = "pylamarzocco";
+          tag = "v${version}";
+          hash = "sha256-h3Oh1y1tirOWh3I8piybLZfTKwyGk0zJJ6XmHvmbUW0=";
+        };
+        dependencies = with self; [
+          bleak
+          httpx
+          websockets
+        ];
+      });
+
+      pymodbus = super.pymodbus.overridePythonAttrs (oldAttrs: rec {
+        version = "3.6.9";
+        src = fetchFromGitHub {
+          inherit (oldAttrs.src) owner repo;
+          rev = "refs/tags/v${version}";
+          hash = "sha256-ScqxDO0hif8p3C6+vvm7FgSEQjCXBwUPOc7Y/3OfkoI=";
         };
       });
 
@@ -335,6 +361,26 @@ let
         ];
       };
 
+      voip-utils = super.voip-utils.overridePythonAttrs (oldAttrs: rec {
+        version = "0.1.0";
+        src = fetchFromGitHub {
+          inherit (oldAttrs.src) owner repo;
+          rev = "refs/tags/v${version}";
+          hash = "sha256-PG4L6KphH9JIZO76cCN8eClFE2CneEIExlXS+x79k3U=";
+        };
+        # tests were not implemented until version 0.2.0
+        doCheck = false;
+      });
+
+      vulcan-api = super.vulcan-api.overridePythonAttrs (oldAttrs: rec {
+        version = "2.3.2";
+        src = fetchFromGitHub {
+          inherit (oldAttrs.src) owner repo;
+          rev = "refs/tags/v${version}";
+          hash = "sha256-ebWKcRxAAkHVqV2RaftIHBRJe/TYSUxS+5Utxb0yhtw=";
+        };
+      });
+
       # Pinned due to API changes ~1.0
       vultr = super.vultr.overridePythonAttrs (oldAttrs: rec {
         version = "0.1.2";
@@ -380,7 +426,9 @@ let
       home-assistant-frontend = self.callPackage ./frontend.nix { };
       home-assistant-intents = self.callPackage ./intents.nix { };
       homeassistant = self.toPythonModule home-assistant;
-      pytest-homeassistant-custom-component = self.callPackage ./pytest-homeassistant-custom-component.nix { };
+      pytest-homeassistant-custom-component =
+        self.callPackage ./pytest-homeassistant-custom-component.nix
+          { };
     })
   ];
 
@@ -403,11 +451,14 @@ let
   extraBuildInputs = extraPackages python.pkgs;
 
   # Don't forget to run update-component-packages.py after updating
-  hassVersion = "2024.10.4";
+  hassVersion = "2024.12.5";
 
-in python.pkgs.buildPythonApplication rec {
+in
+python.pkgs.buildPythonApplication rec {
   pname = "homeassistant";
-  version = assert (componentPackages.version == hassVersion); hassVersion;
+  version =
+    assert (componentPackages.version == hassVersion);
+    hassVersion;
   pyproject = true;
 
   # check REQUIRED_PYTHON_VER in homeassistant/const.py
@@ -421,13 +472,13 @@ in python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     rev = "refs/tags/${version}";
-    hash = "sha256-uaGGt5qCdyFXuEtg20MzmFd4PXkdPP8h4HJBvRV6sz8=";
+    hash = "sha256-LJgwtVQvO1iUPYfzAsE6l9u4+EIzAnc3IJ5FZb3xniM=";
   };
 
   # Secondary source is pypi sdist for translations
   sdist = fetchPypi {
     inherit pname version;
-    hash = "sha256-al45WS8SIgOM2TqGPIptZU7iNMapYUg+fK2MLh68lxs=";
+    hash = "sha256-PfedigJWHLv2BqHOgVedDyJxxxSmdHe2CvPNYCWi6aA=";
   };
 
   build-system = with python.pkgs; [
@@ -471,15 +522,14 @@ in python.pkgs.buildPythonApplication rec {
       src = ./patches/ffmpeg-path.patch;
       ffmpeg = "${lib.getExe ffmpeg-headless}";
     })
+
+    ./patches/watchdog5-compat.patch
   ];
 
   postPatch = ''
-    substituteInPlace tests/test_config.py --replace-fail '"/usr"' "\"$NIX_BUILD_TOP/media\""
-
-    substituteInPlace pyproject.toml --replace-fail "wheel~=0.43.0" wheel
+    substituteInPlace tests/test_core_config.py --replace-fail '"/usr"' "\"$NIX_BUILD_TOP/media\""
 
     sed -i 's/setuptools[~=]/setuptools>/' pyproject.toml
-    sed -i 's/wheel[~=]/wheel>/' pyproject.toml
   '';
 
   dependencies = with python.pkgs; [
@@ -509,12 +559,14 @@ in python.pkgs.buildPythonApplication rec {
     orjson
     packaging
     pillow
+    propcache
     psutil-home-assistant
     pyjwt
     pyopenssl
     python-slugify
     pyyaml
     requests
+    securetar
     sqlalchemy
     typing-extensions
     ulid-transform
@@ -534,32 +586,35 @@ in python.pkgs.buildPythonApplication rec {
   # upstream only tests on Linux, so do we.
   doCheck = stdenv.hostPlatform.isLinux;
 
-  nativeCheckInputs = with python.pkgs; [
-    # test infrastructure (selectively from requirement_test.txt)
-    freezegun
-    pytest-asyncio
-    pytest-aiohttp
-    pytest-freezer
-    pytest-mock
-    pytest-rerunfailures
-    pytest-socket
-    pytest-timeout
-    pytest-unordered
-    pytest-xdist
-    pytestCheckHook
-    requests-mock
-    respx
-    syrupy
-    tomli
-    # Sneakily imported in tests/conftest.py
-    paho-mqtt
-    # Used in tests/non_packaged_scripts/test_alexa_locales.py
-    beautifulsoup4
-  ] ++ lib.concatMap (component: getPackages component python.pkgs) [
-    # some components are needed even if tests in tests/components are disabled
-    "default_config"
-    "hue"
-  ];
+  nativeCheckInputs =
+    with python.pkgs;
+    [
+      # test infrastructure (selectively from requirement_test.txt)
+      freezegun
+      pytest-asyncio
+      pytest-aiohttp
+      pytest-freezer
+      pytest-mock
+      pytest-rerunfailures
+      pytest-socket
+      pytest-timeout
+      pytest-unordered
+      pytest-xdist
+      pytestCheckHook
+      requests-mock
+      respx
+      syrupy
+      tomli
+      # Sneakily imported in tests/conftest.py
+      paho-mqtt
+      # Used in tests/non_packaged_scripts/test_alexa_locales.py
+      beautifulsoup4
+    ]
+    ++ lib.concatMap (component: getPackages component python.pkgs) [
+      # some components are needed even if tests in tests/components are disabled
+      "default_config"
+      "hue"
+    ];
 
   pytestFlagsArray = [
     # assign tests grouped by file to workers
@@ -615,7 +670,8 @@ in python.pkgs.buildPythonApplication rec {
       extraComponents
       getPackages
       python
-      supportedComponentsWithTests;
+      supportedComponentsWithTests
+      ;
     pythonPath = python.pkgs.makePythonPath (componentBuildInputs ++ extraBuildInputs);
     frontend = python.pkgs.home-assistant-frontend;
     intents = python.pkgs.home-assistant-intents;

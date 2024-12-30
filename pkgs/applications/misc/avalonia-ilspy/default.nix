@@ -44,7 +44,7 @@ buildDotnetModule rec {
 
   buildInputs = [
     # Dependencies of nuget packages w/ native binaries
-    stdenv.cc.cc.lib
+    (lib.getLib stdenv.cc.cc)
     fontconfig
   ];
 
@@ -78,7 +78,7 @@ buildDotnetModule rec {
   dotnet-runtime = dotnetCorePackages.runtime_6_0;
 
   projectFile = "ILSpy/ILSpy.csproj";
-  nugetDeps = ./deps.nix;
+  nugetDeps = ./deps.json;
   executables = [ "ILSpy" ];
 
   desktopItems = [

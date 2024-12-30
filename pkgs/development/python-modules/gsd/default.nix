@@ -4,7 +4,6 @@
   cython,
   fetchFromGitHub,
   numpy,
-  numpy_2,
   pytestCheckHook,
   pythonOlder,
   setuptools,
@@ -12,7 +11,7 @@
 
 buildPythonPackage rec {
   pname = "gsd";
-  version = "3.4.0";
+  version = "3.4.2";
   pyproject = true;
 
   disabled = pythonOlder "3.7";
@@ -21,12 +20,12 @@ buildPythonPackage rec {
     owner = "glotzerlab";
     repo = "gsd";
     rev = "refs/tags/v${version}";
-    hash = "sha256-4HJZZ5UUENHhKePfau6KT4E4qA9YCGpe/IMLyf5egsk=";
+    hash = "sha256-sBO5tt85BVLUrqSVWUT/tYzeLWyvyyI9ZXjNLt9/uAE=";
   };
 
   build-system = [
     cython
-    numpy_2
+    numpy
     setuptools
   ];
 

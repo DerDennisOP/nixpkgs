@@ -10,16 +10,16 @@
 
 buildGoModule rec {
   pname = "buf";
-  version = "1.45.0";
+  version = "1.48.0";
 
   src = fetchFromGitHub {
     owner = "bufbuild";
     repo = "buf";
     rev = "v${version}";
-    hash = "sha256-zmk9o0P4BaUqng9E/s6KKWntwS4NmTg/xPTrQruTQSo=";
+    hash = "sha256-F1ZmhVAjm8KVFePXLeOnyvh1TvjXBDCwUizwQSpp6L4=";
   };
 
-  vendorHash = "sha256-NMrPBUwbDsXW8tc5l1Liqd19+v2RrXf6dlcwVnHxVXQ=";
+  vendorHash = "sha256-M5q93hJjEsdMG4N+bjHTTUqBLgy2b7oIRmkizuGxeoE=";
 
   patches = [
     # Skip a test that requires networking to be available to work.
@@ -75,12 +75,12 @@ buildGoModule rec {
 
   passthru.tests.version = testers.testVersion { package = buf; };
 
-  meta = with lib; {
+  meta = {
     homepage = "https://buf.build";
     changelog = "https://github.com/bufbuild/buf/releases/tag/v${version}";
     description = "Create consistent Protobuf APIs that preserve compatibility and comply with design best-practices";
-    license = licenses.asl20;
-    maintainers = with maintainers; [ jk lrewega aaronjheng ];
+    license = lib.licenses.asl20;
+    maintainers = with lib.maintainers; [ jk lrewega aaronjheng ];
     mainProgram = "buf";
   };
 }

@@ -62,18 +62,19 @@ let
 in
 py.pkgs.buildPythonApplication rec {
   pname = "awscli2";
-  version = "2.18.15"; # N.B: if you change this, check if overrides are still up-to-date
+  version = "2.22.13"; # N.B: if you change this, check if overrides are still up-to-date
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "aws-cli";
     rev = "refs/tags/${version}";
-    hash = "sha256-dm4Z3WsFq5GQN6gvi5OS9J96PqhGx8Qz2OsHwUBrsAs=";
+    hash = "sha256-yrkGfD2EBPsNRLcafdJE4UnYsK7EAfIA7TLa6smmWjY=";
   };
 
   postPatch = ''
     substituteInPlace pyproject.toml \
+      --replace-fail 'flit_core>=3.7.1,<3.9.1' 'flit_core>=3.7.1' \
       --replace-fail 'awscrt>=0.19.18,<=0.22.0' 'awscrt>=0.22.0' \
       --replace-fail 'cryptography>=40.0.0,<43.0.2' 'cryptography>=43.0.0' \
       --replace-fail 'distro>=1.5.0,<1.9.0' 'distro>=1.5.0' \
@@ -171,7 +172,7 @@ py.pkgs.buildPythonApplication rec {
       # Excludes 1.x versions from the Github tags list
       extraArgs = [
         "--version-regex"
-        "^(2\.(.*))"
+        "^(2\\.(.*))"
       ];
     };
     tests.version = testers.testVersion {

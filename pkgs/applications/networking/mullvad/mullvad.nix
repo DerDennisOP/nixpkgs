@@ -10,6 +10,7 @@
 , libnftnl
 , libmnl
 , libwg
+, darwin
 , enableOpenvpn ? true
 , openvpn-mullvad
 , shadowsocks-rust
@@ -27,22 +28,18 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "mullvad";
-  version = "2024.7";
+  version = "2024.8";
 
   src = fetchFromGitHub {
     owner = "mullvad";
     repo = "mullvadvpn-app";
     rev = version;
     fetchSubmodules = true;
-    hash = "sha256-me0e8Cb1dRrnAeiCmsXiclcDMruVLV3t0eGAM3RU1es=";
+    hash = "sha256-mDQRIlu1wslgLhYlH87i9yntfPwTd7UQK2c6IoHuIqU=";
   };
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-    outputHashes = {
-      "udp-over-tcp-0.3.0" = "sha256-5PeaM7/zhux1UdlaKpnQ2yIdmFy1n2weV/ux9lSRha4=";
-    };
-  };
+  useFetchCargoVendor = true;
+  cargoHash = "sha256-HCW2brAQK20oJIFKrdqHqRmihnKnxGZfyt5T8Yrt1z8=";
 
   checkFlags = "--skip=version_check";
 
@@ -55,11 +52,15 @@ rustPlatform.buildRustPackage rec {
     fakeGoCopyLibwg
   ];
 
-  buildInputs = [
-    dbus.dev
-    libnftnl
-    libmnl
-  ];
+  buildInputs =
+    lib.optionals stdenv.hostPlatform.isLinux [
+      dbus.dev
+      libnftnl
+      libmnl
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
+      darwin.libpcap
+    ];
 
   postInstall = ''
     compdir=$(mktemp -d)

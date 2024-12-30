@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "nchat";
-  version = "5.2.11";
+  version = "5.4.2";
 
   src = fetchFromGitHub {
     owner = "d99kris";
     repo = "nchat";
     rev = "refs/tags/v${version}";
-    hash = "sha256-LcTVftLKlzHstSaJjdtqoEmQ7kiqft9dbXRXoYjbaus=";
+    hash = "sha256-NrAU47GA7ZASJ7vCo1S8nyGBpfsZn4EBBqx2c4HKx7k=";
   };
 
   postPatch = ''
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
       sqlite
       zlib
     ]
-    ++ lib.optionals stdenv.isDarwin (
+    ++ lib.optionals stdenv.hostPlatform.isDarwin (
       with darwin.apple_sdk.frameworks;
       [
         AppKit

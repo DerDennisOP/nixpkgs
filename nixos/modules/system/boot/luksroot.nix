@@ -502,7 +502,11 @@ let
 
         echo -n "Passphrase for $device: "
         IFS= read -rs passphrase
+        ret=$?
         echo
+        if [ $ret -ne 0 ]; then
+          die "End of file reached. Exiting shell."
+        fi
 
         rm /crypt-ramfs/device
         echo -n "$passphrase" > /crypt-ramfs/passphrase
@@ -1094,6 +1098,7 @@ in
 
     };
     # We do this because we need the udev rules from the package
+    services.lvm.enable = true;
     boot.initrd.services.lvm.enable = true;
 
     boot.initrd.preFailCommands = mkIf (!config.boot.initrd.systemd.enable) postCommands;

@@ -3,31 +3,24 @@
   stdenv,
   rustPlatform,
   fetchFromGitHub,
-  darwin,
   versionCheckHook,
   nix-update-script,
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "bacon";
-  version = "3.0.0";
+  version = "3.6.0";
 
   src = fetchFromGitHub {
     owner = "Canop";
     repo = "bacon";
     rev = "refs/tags/v${version}";
-    hash = "sha256-fSlakjZbY8jrFkCqVxPr3UKwf1Oq4yPhLmVbzsksSeg=";
+    hash = "sha256-L+LVD7ceKUQ+nVyepusrv9Zz4BSGjXucnimsf+abM2k=";
   };
 
-  cargoHash = "sha256-WT0uXmchhapss3AU4+e2wA3nBVjzikfRNRyAvQnpJfY=";
+  cargoHash = "sha256-NUCy3DZ1uV1iPanHGbK/TSY6oS3zSQxVpmnw7Aon+pw=";
 
-  buildInputs = lib.optionals stdenv.hostPlatform.isDarwin [
-    darwin.apple_sdk.frameworks.CoreServices
-  ];
-
-  nativeInstallCheckInputs = [
-    versionCheckHook
-  ];
+  nativeInstallCheckInputs = [ versionCheckHook ];
   versionCheckProgramArg = [ "--version" ];
   doInstallCheck = true;
 

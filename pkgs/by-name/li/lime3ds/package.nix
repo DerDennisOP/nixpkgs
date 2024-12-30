@@ -7,7 +7,6 @@
   cpp-jwt,
   doxygen,
   enet,
-  fetchpatch,
   fetchzip,
   fmt,
   ffmpeg_6-headless,
@@ -56,11 +55,11 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "lime3ds";
-  version = "2118.2";
+  version = "2119.1";
 
   src = fetchzip {
-    url = "https://github.com/Lime3DS/Lime3DS/releases/download/${finalAttrs.version}/lime3ds-unified-source-${finalAttrs.version}.tar.xz";
-    hash = "sha256-DovVkk5QolOizV3mfxtMNMeIJWYs3xAu96icrTcQN68=";
+    url = "https://github.com/Lime3DS/Lime3ds-archive/releases/download/${finalAttrs.version}/lime3ds-unified-source-${finalAttrs.version}.tar.xz";
+    hash = "sha256-37KFGCVyc4QW+D00CzN1+lpNYZxCWRkflt7rkIFcdM8=";
   };
 
   nativeBuildInputs = [
@@ -91,7 +90,6 @@ stdenv.mkDerivation (finalAttrs: {
       openssl
       pipewire
       portaudio
-      SDL2
       soundtouch
       sndio
       spirv-tools
@@ -109,17 +107,10 @@ stdenv.mkDerivation (finalAttrs: {
         qtwayland
       ]
     )
+    ++ optionals enableSdl2Frontend [ SDL2 ]
     ++ optionals enableQtTranslations [ kdePackages.qttools ]
     ++ optionals enableCubeb [ cubeb ]
     ++ optional useDiscordRichPresence rapidjson;
-
-  patches = [
-    # FIXME: this patch fixes the build with newer QT versions, remove it when the new version gets released
-    (fetchpatch {
-      url = "https://patch-diff.githubusercontent.com/raw/Lime3DS/Lime3DS/pull/441.patch";
-      hash = "sha256-NKJ3fmh5kY/DaTCVbIz1dvJrvK5IbJt1eogrbXWciCI=";
-    })
-  ];
 
   postPatch = ''
     # Fix file not found when looking in var/empty instead of opt
@@ -172,7 +163,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   meta = {
     description = "A Nintendo 3DS emulator based on Citra";
-    homepage = "https://github.com/Lime3DS/Lime3DS";
+    homepage = "https://github.com/Lime3DS/Lime3ds-archive";
     license = lib.licenses.gpl2Only;
     maintainers = with lib.maintainers; [ arthsmn ];
     mainProgram = "lime3ds";

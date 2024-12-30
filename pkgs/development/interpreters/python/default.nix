@@ -20,10 +20,10 @@
       sourceVersion = {
         major = "3";
         minor = "12";
-        patch = "7";
+        patch = "8";
         suffix = "";
       };
-      hash = "sha256-JIh7kuKv1KKsYCQZrUtZY3L2esmwdxkPRZq6OQ+vVVA=";
+      hash = "sha256-yQkVe7JewRTlhpEkzCqcSk1MHpV8pP9VPx7caSEBFU4=";
     };
   };
 
@@ -46,10 +46,10 @@ in {
     sourceVersion = {
       major = "3";
       minor = "9";
-      patch = "20";
+      patch = "21";
       suffix = "";
     };
-    hash = "sha256-aygSee/YUpTS1pk+FzmDpXRkwBM5Vvu7VTbslka+rww=";
+    hash = "sha256-MSb1lZLJsNeYWEdV8r97CB+hyjXOem/qmAEI11KgW7E=";
     inherit passthruFun;
   };
 
@@ -58,10 +58,10 @@ in {
     sourceVersion = {
       major = "3";
       minor = "10";
-      patch = "15";
+      patch = "16";
       suffix = "";
     };
-    hash = "sha256-qrCVCBdzUXJgGHmHLZN8HkkopXxAmuAjaew9kdzOvnk=";
+    hash = "sha256-v7JJYJmQIgSRobkoUKBxNe0IMeQXOM9oHWPPAbKo+9E=";
     inherit passthruFun;
   };
 
@@ -70,10 +70,10 @@ in {
     sourceVersion = {
       major = "3";
       minor = "11";
-      patch = "10";
+      patch = "11";
       suffix = "";
     };
-    hash = "sha256-B6Q1bpEpAOYaFcsJSaBsSgUBLiE+zWtOhND2equ+43I=";
+    hash = "sha256-Kpkgx6DNI23jNkTtmAoTy7whBYv9xSj+u2CBV17XO+M=";
     inherit passthruFun;
   };
 
@@ -87,10 +87,22 @@ in {
     sourceVersion = {
       major = "3";
       minor = "13";
-      patch = "0";
+      patch = "1";
       suffix = "";
     };
-    hash = "sha256-CG3liC48sxDU3KSEV1IuLkgBjs1D2pzfgn9qB1nvsH0=";
+    hash = "sha256-nPlCe+6eIkLjh33Q9rZBwYU8pGHznWUDziYKWcgL8Nk=";
+    inherit passthruFun;
+  };
+
+  python314 = callPackage ./cpython {
+    self = __splicedPackages.python314;
+    sourceVersion = {
+      major = "3";
+      minor = "14";
+      patch = "0";
+      suffix = "a2";
+    };
+    hash = "sha256-L/nhAUc0Kz79afXNnMBuxGJQ8qBGWHWZ0Y4srGnAWSA=";
     inherit passthruFun;
   };
   # Minimal versions of Python (built without optional dependencies)

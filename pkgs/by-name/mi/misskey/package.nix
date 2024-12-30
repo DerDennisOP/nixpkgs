@@ -18,13 +18,13 @@
 stdenv.mkDerivation (finalAttrs: {
   pname = "misskey";
 
-  version = "2024.10.0";
+  version = "2024.11.0";
 
   src = fetchFromGitHub {
     owner = "misskey-dev";
     repo = finalAttrs.pname;
     rev = finalAttrs.version;
-    hash = "sha256-cQ8JQnnaS6aX2wZdnimTznHj20hJe0CJ4NESybCk9CU=";
+    hash = "sha256-uei5Ojx39kCbS8DCjHZ5PoEAsqJ5vC6SsFqIEIJ16n8=";
     fetchSubmodules = true;
   };
 
@@ -33,12 +33,12 @@ stdenv.mkDerivation (finalAttrs: {
     pnpm.configHook
     makeWrapper
     python3
-  ] ++ lib.optionals stdenv.isDarwin [ xcbuild.xcrun ];
+  ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ xcbuild.xcrun ];
 
   # https://nixos.org/manual/nixpkgs/unstable/#javascript-pnpm
   pnpmDeps = pnpm.fetchDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-oH4raw+zIQKY+mydteKkY0LqW+13u1408ibm30j1Wss=";
+    hash = "sha256-YWZhm5eKjB6JGP45WC3UrIkr7vuBUI4Q3oiK8Lst3dI=";
   };
 
   buildPhase = ''
@@ -103,7 +103,7 @@ stdenv.mkDerivation (finalAttrs: {
           lib.makeLibraryPath [
             jemalloc
             ffmpeg-headless
-            stdenv.cc.cc.lib
+            stdenv.cc.cc
           ]
         }
 

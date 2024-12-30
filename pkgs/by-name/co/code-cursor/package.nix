@@ -8,11 +8,11 @@
 }:
 let
   pname = "cursor";
-  version = "0.42.4";
+  version = "0.44.9";
   appKey = "230313mzl4w4u92";
   src = fetchurl {
-    url = "https://download.todesktop.com/230313mzl4w4u92/cursor-0.42.4-build-2410291z3bdg1dy-x86_64.AppImage";
-    hash = "sha256-CD6bQ4T8DhJidiOxNRgRDL4obfEZx7hnO0VotVb6lDc=";
+    url = "https://download.todesktop.com/230313mzl4w4u92/cursor-0.44.9-build-2412268nc6pfzgo-x86_64.AppImage";
+    hash = "sha256-DV4Om5eAt7hDDPsyCwhALGhH36YAfvDk5u8Mnlhalsw=";
   };
   appimageContents = appimageTools.extractType2 { inherit version pname src; };
 in
@@ -38,7 +38,7 @@ stdenvNoCC.mkDerivation {
     substituteInPlace $out/share/applications/cursor.desktop --replace-fail "AppRun" "cursor"
 
     wrapProgram $out/bin/cursor \
-      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}} --no-update"
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}} --no-update"
 
     runHook postInstall
   '';
@@ -62,6 +62,7 @@ stdenvNoCC.mkDerivation {
   meta = {
     description = "AI-powered code editor built on vscode";
     homepage = "https://cursor.com";
+    changelog = "https://cursor.com/changelog";
     license = lib.licenses.unfree;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     maintainers = with lib.maintainers; [ sarahec ];

@@ -25,15 +25,16 @@
   libadwaita,
   geocode-glib_2,
   tzdata,
+  writeText,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gnome-maps";
-  version = "47.1";
+  version = "47.2";
 
   src = fetchurl {
     url = "mirror://gnome/sources/gnome-maps/${lib.versions.major finalAttrs.version}/gnome-maps-${finalAttrs.version}.tar.xz";
-    hash = "sha256-TwLtLo44GeWdptm0rIgA6GY1349GpHzyqv2ThsgwEwM=";
+    hash = "sha256-WFHnhtrsZY8h5FeiBv8KmtFlnzdBqtlJCxvzGSFU/ps=";
   };
 
   doCheck = !stdenv.hostPlatform.isDarwin;
@@ -66,6 +67,13 @@ stdenv.mkDerivation (finalAttrs: {
     librest_1_0
     libsecret
     libsoup_3
+  ];
+
+  mesonFlags = [
+    "--cross-file=${writeText "crossfile.ini" ''
+      [binaries]
+      gjs = '${lib.getExe gjs}'
+    ''}"
   ];
 
   postPatch = ''

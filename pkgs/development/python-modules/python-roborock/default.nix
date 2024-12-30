@@ -15,11 +15,12 @@
   pytest-asyncio,
   pytestCheckHook,
   pythonOlder,
+  vacuum-map-parser-roborock,
 }:
 
 buildPythonPackage rec {
   pname = "python-roborock";
-  version = "2.6.1";
+  version = "2.8.4";
   pyproject = true;
 
   disabled = pythonOlder "3.10";
@@ -27,8 +28,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "humbertogontijo";
     repo = "python-roborock";
-    rev = "refs/tags/v${version}";
-    hash = "sha256-0gzbPa19UIt8Vs0Vnqs9j0tFJAkRTupU7DxT+7rwouI=";
+    tag = "v${version}";
+    hash = "sha256-/VDDonWJ/BdWjOzIFSddh9dZEZxIP2XwODsOpnPKbHs=";
   };
 
   postPatch = ''
@@ -40,7 +41,6 @@ buildPythonPackage rec {
 
   build-system = [ poetry-core ];
 
-
   propagatedBuildInputs = [
     aiohttp
     async-timeout
@@ -49,6 +49,7 @@ buildPythonPackage rec {
     dacite
     paho-mqtt
     pycryptodome
+    vacuum-map-parser-roborock
   ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ pycryptodomex ];
 
   nativeCheckInputs = [

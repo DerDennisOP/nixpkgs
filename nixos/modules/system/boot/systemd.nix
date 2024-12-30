@@ -198,7 +198,7 @@ in
 
     package = mkPackageOption pkgs "systemd" {};
 
-    enableStrictShellChecks = mkEnableOption "running shellcheck on the generated scripts for systemd units.";
+    enableStrictShellChecks = mkEnableOption "" // { description = "Whether to run shellcheck on the generated scripts for systemd units."; };
 
     units = mkOption {
       description = "Definition of systemd units; see {manpage}`systemd.unit(5)`.";
@@ -675,7 +675,6 @@ in
     systemd.services.systemd-udev-settle.restartIfChanged = false; # Causes long delays in nixos-rebuild
     systemd.targets.local-fs.unitConfig.X-StopOnReconfiguration = true;
     systemd.targets.remote-fs.unitConfig.X-StopOnReconfiguration = true;
-    systemd.targets.network-online.wantedBy = [ "multi-user.target" ];
     systemd.services.systemd-importd.environment = proxy_env;
     systemd.services.systemd-pstore.wantedBy = [ "sysinit.target" ]; # see #81138
 

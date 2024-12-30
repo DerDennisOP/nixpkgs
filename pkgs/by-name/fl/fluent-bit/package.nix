@@ -14,13 +14,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "fluent-bit";
-  version = "3.1.9";
+  version = "3.2.3";
 
   src = fetchFromGitHub {
     owner = "fluent";
     repo = "fluent-bit";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-SIBdiKgg444sZ8RUQscnOg8XzuAZcLvU4++0HY0G/ss=";
+    hash = "sha256-5Oyw3nHlAyywF+G0UiGyi1v+jAr8eyKt/1cDT5FdJXQ=";
   };
 
   # optional only to avoid linux rebuild

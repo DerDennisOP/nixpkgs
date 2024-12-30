@@ -24,7 +24,7 @@
 , libxcb
 , libxkbcommon
 , makeWrapper
-, mesa
+, libgbm
 , nspr
 , nss
 , pango
@@ -59,7 +59,7 @@ let
       libGL
       libnotify
       libxkbcommon
-      mesa
+      libgbm
       nspr
       nss
       pango
@@ -117,7 +117,7 @@ stdenv.mkDerivation {
 
   preFixup = ''
     gappsWrapperArgs+=(
-      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}"
     )
   '';
 

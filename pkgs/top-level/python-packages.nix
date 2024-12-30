@@ -9929,6 +9929,8 @@ self: super: with self; {
 
   pandas-datareader = callPackage ../development/python-modules/pandas-datareader { };
 
+  pandas-ta = callPackage ../development/python-modules/pandas-ta { };
+
   pandoc-attributes = callPackage ../development/python-modules/pandoc-attributes { };
 
   pandoc-latex-environment = callPackage ../development/python-modules/pandoc-latex-environment { };
@@ -15698,6 +15700,8 @@ self: super: with self; {
   sysv-ipc = callPackage ../development/python-modules/sysv-ipc { };
 
   syrupy = callPackage ../development/python-modules/syrupy { };
+
+  ta-lib-python = callPackage ../development/python-modules/ta-lib-python { };
 
   tabcmd = callPackage ../development/python-modules/tabcmd { };
 

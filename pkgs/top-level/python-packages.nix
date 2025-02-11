@@ -10078,6 +10078,8 @@ self: super: with self; {
 
   pandas-datareader = callPackage ../development/python-modules/pandas-datareader { };
 
+  pandas-ta = callPackage ../development/python-modules/pandas-ta { };
+
   pandera = callPackage ../development/python-modules/pandera { };
 
   pandoc-attributes = callPackage ../development/python-modules/pandoc-attributes { };
@@ -16244,6 +16246,8 @@ self: super: with self; {
   textual-slider = callPackage ../development/python-modules/textual-slider { };
 
   textual-universal-directorytree = callPackage ../development/python-modules/textual-universal-directorytree { };
+
+  textualeffects = callPackage ../development/python-modules/textualeffects { };
 
   textual-textarea = callPackage ../development/python-modules/textual-textarea { };
 

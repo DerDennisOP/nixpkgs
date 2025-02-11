@@ -53,8 +53,8 @@ rustPlatform.buildRustPackage rec {
     ];
 
   # skip defaults on darwin because foundationdb is not available
-  buildNoDefaultFeatures = stdenv.hostPlatform.isDarwin;
-  buildFeatures = lib.optional (stdenv.hostPlatform.isDarwin) [
+  buildNoDefaultFeatures = true;
+  buildFeatures = [
     "sqlite"
     "postgres"
     "mysql"

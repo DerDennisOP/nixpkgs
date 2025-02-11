@@ -19,13 +19,15 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "stalwart-mail";
-  version = "0.11.6";
+  version = "0.11.6-unstable";
 
   src = fetchFromGitHub {
     owner = "stalwartlabs";
     repo = "mail-server";
-    tag = "v${version}";
-    hash = "sha256-8xRmAPqIVanGyWoUWb4DyRkhl5djPJD+ie03B3FyZ4w=";
+    # release 0.11.6 broken, see https://github.com/stalwartlabs/mail-server/issues/1150
+    # tag = "v${version}";
+    rev = "fa6483b6df57513582425119027bc4fce8f03d65";
+    hash = "sha256-mB3Vm07b+eKDlQ95pmVk14Q7jXTBbV1jTbN+6hcFt0s=";
     fetchSubmodules = true;
   };
 
@@ -52,9 +54,9 @@ rustPlatform.buildRustPackage rec {
       darwin.apple_sdk.frameworks.SystemConfiguration
     ];
 
-  # skip defaults on darwin because foundationdb is not available
-  buildNoDefaultFeatures = stdenv.hostPlatform.isDarwin;
-  buildFeatures = lib.optional (stdenv.hostPlatform.isDarwin) [
+  # Issue: https://github.com/stalwartlabs/mail-server/issues/1104
+  buildNoDefaultFeatures = true;
+  buildFeatures = [
     "sqlite"
     "postgres"
     "mysql"

@@ -19,13 +19,15 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "stalwart-mail";
-  version = "0.11.6";
+  version = "0.11.6-unstable";
 
   src = fetchFromGitHub {
     owner = "stalwartlabs";
     repo = "mail-server";
-    tag = "v${version}";
-    hash = "sha256-8xRmAPqIVanGyWoUWb4DyRkhl5djPJD+ie03B3FyZ4w=";
+    # release 0.11.6 broken, see https://github.com/stalwartlabs/mail-server/issues/1150
+    # tag = "v${version}";
+    rev = "fa6483b6df57513582425119027bc4fce8f03d65";
+    hash = "sha256-mB3Vm07b+eKDlQ95pmVk14Q7jXTBbV1jTbN+6hcFt0s=";
     fetchSubmodules = true;
   };
 
@@ -52,13 +54,7 @@ rustPlatform.buildRustPackage rec {
       darwin.apple_sdk.frameworks.SystemConfiguration
     ];
 
-  postPatch = ''
-    # Apply: https://github.com/stalwartlabs/mail-server/commit/fa6483b6df57513582425119027bc4fce8f03d65
-    substituteInPlace ./crates/directory/src/lib.rs --replace-fail "#[cfg(feature = \"enterprise\")]" ""
-    substituteInPlace ./crates/jmap/src/api/management/principal.rs --replace-fail "#[cfg(feature = \"enterprise\")]\n            DirectoryInner::OpenId(_) => \"OpenID\"," "DirectoryInner::OpenId(_) => \"OpenID\","
-  '';
-
-  # skip defaults on darwin because foundationdb is not available
+  # Issue: https://github.com/stalwartlabs/mail-server/issues/1104
   buildNoDefaultFeatures = true;
   buildFeatures = [
     "sqlite"

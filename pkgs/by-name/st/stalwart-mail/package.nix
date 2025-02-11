@@ -52,6 +52,12 @@ rustPlatform.buildRustPackage rec {
       darwin.apple_sdk.frameworks.SystemConfiguration
     ];
 
+  postPatch = ''
+    # Apply: https://github.com/stalwartlabs/mail-server/commit/fa6483b6df57513582425119027bc4fce8f03d65
+    substituteInPlace ./crates/directory/src/lib.rs --replace-fail "#[cfg(feature = \"enterprise\")]" ""
+    substituteInPlace ./crates/jmap/src/api/management/principal.rs --replace-fail "#[cfg(feature = \"enterprise\")]\n            DirectoryInner::OpenId(_) => \"OpenID\"," "DirectoryInner::OpenId(_) => \"OpenID\","
+  '';
+
   # skip defaults on darwin because foundationdb is not available
   buildNoDefaultFeatures = true;
   buildFeatures = [

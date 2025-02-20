@@ -19,16 +19,14 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "stalwart-mail";
-  version = "0.11.6-unstable";
+  version = "0.11.6-unstable-2025-02-04";
 
   src = fetchFromGitHub {
     owner = "stalwartlabs";
     repo = "mail-server";
     # release 0.11.6 broken, see https://github.com/stalwartlabs/mail-server/issues/1150
-    # tag = "v${version}";
     rev = "fa6483b6df57513582425119027bc4fce8f03d65";
     hash = "sha256-mB3Vm07b+eKDlQ95pmVk14Q7jXTBbV1jTbN+6hcFt0s=";
-    fetchSubmodules = true;
   };
 
   useFetchCargoVendor = true;

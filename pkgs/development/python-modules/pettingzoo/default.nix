@@ -1,27 +1,28 @@
 {
   lib,
   buildPythonPackage,
-  pythonOlder,
+  chess,
   fetchFromGitHub,
-  setuptools,
-  wheel,
   gymnasium,
   numpy,
-  chess,
   pillow,
+  pre-commit,
   pybox2d,
   pygame,
   pymunk,
-  rlcard,
-  scipy,
-  pre-commit,
   pynput,
   pytest,
   pytest-cov-stub,
   pytest-markdown-docs,
   pytest-xdist,
   pytestCheckHook,
+  pythonOlder,
+  rlcard,
+  scipy,
+  setuptools,
+  shimmy,
   stdenv,
+  wheel,
 }:
 
 buildPythonPackage rec {
@@ -58,30 +59,37 @@ buildPythonPackage rec {
       pymunk
       rlcard
       scipy
-      # shimmy
+      shimmy
     ];
+
     atari = [
       # multi-agent-ale-py
       pygame
     ];
+
     butterfly = [
       pygame
       pymunk
     ];
+
     classic = [
       chess
       pygame
       rlcard
-      # shimmy
+      shimmy
     ];
+
     mpe = [ pygame ];
+
     other = [ pillow ];
+
     sisl = [
       pybox2d
       pygame
       pymunk
       scipy
     ];
+
     testing = [
       # autorom
       pre-commit

@@ -102,7 +102,8 @@ buildPythonPackage rec {
     pytest-markdown-docs
     pytest-xdist
     pytestCheckHook
-    rlcard
+    # relies on deprecated distutils
+    # rlcard
   ];
 
   disabledTestPaths = [

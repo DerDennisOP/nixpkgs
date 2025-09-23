@@ -66,12 +66,21 @@ let
 
   derivation = stdenv.mkDerivation rec {
     pname = "onlyoffice-desktopeditors";
-    version = "9.0.0";
+    version = "9.0.4";
     minor = null;
-    src = fetchurl {
-      url = "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v${version}/onlyoffice-desktopeditors_amd64.deb";
-      hash = "sha256-mGjFFuuplGINgjuIEHoO3AO4ppkum1lifj5ukbfWWS8=";
-    };
+    src = fetchurl (
+      {
+        "aarch64-linux" = {
+          url = "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v${version}/onlyoffice-desktopeditors_arm64.deb";
+          sha256 = "sha256-wF5TdBEpNXeE8SMTmvgjuOp713Vf9gIifsI1yeujuA0=";
+        };
+        "x86_64-linux" = {
+          url = "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v${version}/onlyoffice-desktopeditors_amd64.deb";
+          sha256 = "sha256-zEI9R5AOkE1gMZHL209l6HOh/yfZgmEvMw8+hb9kC+s=";
+        };
+      }
+      .${stdenv.hostPlatform.system} or (throw "unsupported system ${stdenv.hostPlatform.system}")
+    );
 
     nativeBuildInputs = [
       autoPatchelfHook
@@ -186,7 +195,10 @@ buildFHSEnv {
     homepage = "https://www.onlyoffice.com/";
     downloadPage = "https://github.com/ONLYOFFICE/DesktopEditors/releases";
     changelog = "https://github.com/ONLYOFFICE/DesktopEditors/blob/master/CHANGELOG.md";
-    platforms = [ "x86_64-linux" ];
+    platforms = [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
     license = lib.licenses.agpl3Plus;
     maintainers = with lib.maintainers; [
